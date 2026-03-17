@@ -7,6 +7,9 @@ import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_plan_list_state.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/widgets/draft_plan_card.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/widgets/app_bottom_nav_bar.dart';
+import 'package:dota2_draft_plan_mobile/features/draft/presentation/pages/draft_plan_detail_page.dart';
+import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_plan_detail_cubit.dart';
+import 'package:dota2_draft_plan_mobile/core/di/injection_container.dart' as di;
 
 class DraftPlanListPage extends StatefulWidget {
   const DraftPlanListPage({super.key});
@@ -98,8 +101,20 @@ class _DraftPlanListPageState extends State<DraftPlanListPage> {
             child: ListView.builder(
               padding: const EdgeInsets.only(top: 8, bottom: 100),
               itemCount: state.plans.length,
-              itemBuilder: (_, i) =>
-                  DraftPlanCard(plan: state.plans[i], onViewPlan: () {}),
+              itemBuilder: (_, i) => DraftPlanCard(
+                plan: state.plans[i],
+                onViewPlan: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider(
+                        create: (_) => di.sl<DraftPlanDetailCubit>(),
+                        child: DraftPlanDetailPage(planId: state.plans[i].id),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           );
         }
