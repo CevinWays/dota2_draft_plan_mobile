@@ -1,0 +1,6 @@
+1. use the rules in this file to guide your behavior
+2. use cubit/bloc as state management
+3. use clean architecture
+4. use Dio for http requests
+5. use cached image network for image loading
+6. this project using flutter stable 3.38.9

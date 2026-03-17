@@ -1,0 +1,27 @@
+name: dota2_draft_plan_mobile
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.8
+
+dependencies:
+  flutter_bloc: ^9.1.1
+  bloc: ^9.0.0
+  dio: ^5.7.0
+  path: ^1.9.0
+  chucker_flutter: ^1.8.3
+  shimmer: ^3.0.0
+  cached_network_image: ^3.4.1
+  
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
