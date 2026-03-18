@@ -1,4 +1,5 @@
 import 'package:dota2_draft_plan_mobile/features/draft/domain/entities/create_draft_plan_params.dart';
+import 'package:dota2_draft_plan_mobile/features/draft/domain/usecases/update_draft_item_usecases.dart';
 import '../models/draft_plan_model.dart';
 import '../models/draft_plan_detail_model.dart';
 
@@ -6,6 +7,10 @@ abstract class DraftPlanRemoteDataSource {
   Future<List<DraftPlanModel>> getDraftPlans();
   Future<DraftPlanDetailModel> getDraftPlanDetail(String id);
   Future<DraftPlanModel> createDraftPlan(CreateDraftPlanParams params);
+  Future<void> updateBan(UpdateBanParams params);
+  Future<void> updatePreferredPick(UpdatePickParams params);
+  Future<void> updateEnemyThreat(UpdateThreatParams params);
+  Future<void> updateItemTiming(UpdateTimingParams params);
 }
 
 /// Mock implementation — returns hardcoded data matching the design screenshot.
@@ -148,6 +153,26 @@ class DraftPlanRemoteMockDataSource implements DraftPlanRemoteDataSource {
       ],
     );
   }
+
+  @override
+  Future<void> updateBan(UpdateBanParams params) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+  }
+
+  @override
+  Future<void> updatePreferredPick(UpdatePickParams params) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+  }
+
+  @override
+  Future<void> updateEnemyThreat(UpdateThreatParams params) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+  }
+
+  @override
+  Future<void> updateItemTiming(UpdateTimingParams params) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+  }
 }
 
 /// Real Dio-based implementation (wired when API is ready).
@@ -175,6 +200,26 @@ class DraftPlanRemoteApiDataSource implements DraftPlanRemoteDataSource {
   Future<DraftPlanModel> createDraftPlan(CreateDraftPlanParams params) async {
     // final response = await _dio.post('/draft-plans', data: {...});
     // return DraftPlanModel.fromJson(response.data['data']);
+    throw UnimplementedError('Wire up DioClient and implement real API call.');
+  }
+
+  @override
+  Future<void> updateBan(UpdateBanParams params) async {
+    throw UnimplementedError('Wire up DioClient and implement real API call.');
+  }
+
+  @override
+  Future<void> updatePreferredPick(UpdatePickParams params) async {
+    throw UnimplementedError('Wire up DioClient and implement real API call.');
+  }
+
+  @override
+  Future<void> updateEnemyThreat(UpdateThreatParams params) async {
+    throw UnimplementedError('Wire up DioClient and implement real API call.');
+  }
+
+  @override
+  Future<void> updateItemTiming(UpdateTimingParams params) async {
     throw UnimplementedError('Wire up DioClient and implement real API call.');
   }
 }

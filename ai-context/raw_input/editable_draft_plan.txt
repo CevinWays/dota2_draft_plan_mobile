@@ -1,0 +1,103 @@
+US - 10 - Manage Ban List
+As a user
+ I want to add, edit, and remove banned heroes
+ So that I can refine target bans as strategy evolves
+Acceptance Criteria
+User can add a banned hero from hero list
+
+
+Duplicate hero in the same draft plan ban list is prevented
+
+
+User can edit an existing ban entry
+
+
+User can update the strategic note/reason for banning
+
+
+(Optional, recommended) User can replace the selected hero with another hero if allowed by UX
+
+
+User can delete a ban entry
+
+
+Changes persist after refresh/reopen
+
+
+
+US - 11 - Manage Preferred Picks
+As a user
+ I want to add, edit, and remove preferred picks
+ So that I can adjust comfort picks, role assignments, and priority
+Acceptance Criteria
+User can add a preferred pick from hero list
+
+
+Duplicate hero in the same preferred picks list is prevented
+
+
+User can edit an existing preferred pick entry
+
+
+User can update:
+
+
+role (e.g. Mid Laner, Offlaner, Support)
+
+
+priority (Low / Medium / High or numeric equivalent)
+
+
+strategic note
+
+
+(Optional, recommended) User can replace the hero with another hero if needed
+
+
+User can delete a preferred pick entry
+
+
+Changes persist after refresh/reopen
+
+
+
+US - 12 - Manage Enemy Threats
+As a user
+ I want to add, edit, and remove enemy threat entries
+ So that I can keep threat analysis updated for specific matchups
+Acceptance Criteria
+User can add an enemy threat hero from hero list
+
+
+Duplicate hero in the same enemy threats list is prevented
+
+
+User can edit an existing enemy threat entry
+
+
+User can update:
+
+
+threat explanation / note
+
+
+threat level (if enabled in data model)
+
+
+(Optional, recommended) User can replace the threat hero with another hero if allowed
+
+
+User can delete an enemy threat entry
+
+
+Changes persist after refresh/reopen
+
+
+US - 13 - Manage Items Timing
+As a user
+ I want to add, edit, and remove Item Timing
+ So that I can keep threat analysis the right timing for buy and have the item
+Acceptance Criteria
+User can add Items.
+User can update items timing label and explanation.
+User can remove items.

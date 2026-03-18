@@ -8,7 +8,13 @@ import '../cubit/draft_plan_detail_state.dart';
 import '../widgets/draft_section_header.dart';
 import '../widgets/hero_list_item.dart';
 import '../widgets/item_timing_row.dart';
+import '../widgets/modals/edit_ban_hero_modal.dart';
+import '../widgets/modals/edit_enemy_threat_modal.dart';
+import '../widgets/modals/edit_item_timing_modal.dart';
+import '../widgets/modals/edit_preferred_pick_modal.dart';
 import 'draft_summary_page.dart';
+import '../../../../core/di/injection_container.dart';
+import '../cubit/edit_draft_item_cubit.dart';
 
 class DraftPlanDetailPage extends StatefulWidget {
   final String planId;
@@ -173,7 +179,34 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                         heroName: ban.heroName,
                         heroIcon: ban.heroIcon,
                         note: ban.note,
-                        onEdit: () {},
+                        onEdit: () async {
+                          final result = await showModalBottomSheet<bool>(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: AppColors.surfaceVariant,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(16),
+                              ),
+                            ),
+                            builder: (_) => BlocProvider(
+                              create: (_) => sl<EditDraftItemCubit>(),
+                              child: EditBanHeroModal(
+                                planId: widget.planId,
+                                heroId: ban.heroId,
+                                heroName: ban.heroName,
+                                heroIcon: ban.heroIcon,
+                                initialNote: ban.note,
+                              ),
+                            ),
+                          );
+
+                          if (result == true && context.mounted) {
+                            context
+                                .read<DraftPlanDetailCubit>()
+                                .fetchDraftPlanDetail(widget.planId);
+                          }
+                        },
                         onDelete: () {},
                       ),
                     ),
@@ -197,7 +230,36 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                         priority: pick.priority,
                         role: pick.role,
                         note: pick.note,
-                        onEdit: () {},
+                        onEdit: () async {
+                          final result = await showModalBottomSheet<bool>(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: AppColors.surfaceVariant,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(16),
+                              ),
+                            ),
+                            builder: (_) => BlocProvider(
+                              create: (_) => sl<EditDraftItemCubit>(),
+                              child: EditPreferredPickModal(
+                                planId: widget.planId,
+                                heroId: pick.heroId,
+                                heroName: pick.heroName,
+                                heroIcon: pick.heroIcon,
+                                initialRole: pick.role,
+                                initialPriority: pick.priority,
+                                initialNote: pick.note,
+                              ),
+                            ),
+                          );
+
+                          if (result == true && context.mounted) {
+                            context
+                                .read<DraftPlanDetailCubit>()
+                                .fetchDraftPlanDetail(widget.planId);
+                          }
+                        },
                         onDelete: () {},
                       ),
                     ),
@@ -219,7 +281,34 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                         heroName: threat.heroName,
                         heroIcon: threat.heroIcon,
                         note: threat.note,
-                        onEdit: () {},
+                        onEdit: () async {
+                          final result = await showModalBottomSheet<bool>(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: AppColors.surfaceVariant,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(16),
+                              ),
+                            ),
+                            builder: (_) => BlocProvider(
+                              create: (_) => sl<EditDraftItemCubit>(),
+                              child: EditEnemyThreatModal(
+                                planId: widget.planId,
+                                heroId: threat.heroId,
+                                heroName: threat.heroName,
+                                heroIcon: threat.heroIcon,
+                                initialNote: threat.note,
+                              ),
+                            ),
+                          );
+
+                          if (result == true && context.mounted) {
+                            context
+                                .read<DraftPlanDetailCubit>()
+                                .fetchDraftPlanDetail(widget.planId);
+                          }
+                        },
                         onDelete: () {},
                       ),
                     ),
@@ -241,7 +330,33 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                         label: timing.label,
                         targetTime: timing.targetTime,
                         explanation: timing.explanation,
-                        onEdit: () {},
+                        onEdit: () async {
+                          final result = await showModalBottomSheet<bool>(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: AppColors.surfaceVariant,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(16),
+                              ),
+                            ),
+                            builder: (_) => BlocProvider(
+                              create: (_) => sl<EditDraftItemCubit>(),
+                              child: EditItemTimingModal(
+                                planId: widget.planId,
+                                initialLabel: timing.label,
+                                initialTargetTime: timing.targetTime,
+                                initialExplanation: timing.explanation,
+                              ),
+                            ),
+                          );
+
+                          if (result == true && context.mounted) {
+                            context
+                                .read<DraftPlanDetailCubit>()
+                                .fetchDraftPlanDetail(widget.planId);
+                          }
+                        },
                         onDelete: () {},
                       ),
                     ),

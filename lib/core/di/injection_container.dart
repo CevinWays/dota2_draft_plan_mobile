@@ -13,6 +13,8 @@ import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_plan_detail_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/hero_browser_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/create_draft_plan_cubit.dart';
+import 'package:dota2_draft_plan_mobile/features/draft/domain/usecases/update_draft_item_usecases.dart';
+import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/edit_draft_item_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/domain/repositories/auth_repository.dart';
@@ -57,6 +59,10 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => GetDraftPlanDetail(sl()));
   sl.registerLazySingleton(() => GetHeroes(sl()));
   sl.registerLazySingleton(() => CreateDraftPlan(sl()));
+  sl.registerLazySingleton(() => UpdateDraftPlanBan(sl()));
+  sl.registerLazySingleton(() => UpdateDraftPlanPreferredPick(sl()));
+  sl.registerLazySingleton(() => UpdateDraftPlanEnemyThreat(sl()));
+  sl.registerLazySingleton(() => UpdateDraftPlanItemTiming(sl()));
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
 
@@ -65,7 +71,14 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => DraftPlanDetailCubit(getDraftPlanDetail: sl()));
   sl.registerFactory(() => HeroBrowserCubit(sl()));
   sl.registerFactory(() => CreateDraftPlanCubit(sl()));
+  sl.registerFactory(
+    () => EditDraftItemCubit(
+      updateBan: sl(),
+      updatePick: sl(),
+      updateThreat: sl(),
+      updateTiming: sl(),
+    ),
+  );
   sl.registerFactory(() => LoginCubit(loginUseCase: sl()));
   sl.registerFactory(() => RegisterCubit(registerUseCase: sl()));
 }
-
