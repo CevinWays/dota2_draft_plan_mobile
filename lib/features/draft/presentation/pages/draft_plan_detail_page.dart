@@ -8,6 +8,7 @@ import '../cubit/draft_plan_detail_state.dart';
 import '../widgets/draft_section_header.dart';
 import '../widgets/hero_list_item.dart';
 import '../widgets/item_timing_row.dart';
+import 'draft_summary_page.dart';
 
 class DraftPlanDetailPage extends StatefulWidget {
   final String planId;
@@ -35,7 +36,15 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
             padding: const EdgeInsets.only(right: 16.0),
             child: TextButton.icon(
               onPressed: () {
-                // TODO: Navigate to read-only summary mode
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BlocProvider.value(
+                      value: context.read<DraftPlanDetailCubit>(),
+                      child: const DraftSummaryPage(),
+                    ),
+                  ),
+                );
               },
               icon: const Icon(
                 Icons.assignment,
