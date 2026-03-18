@@ -1,9 +1,11 @@
+import 'package:dota2_draft_plan_mobile/features/draft/domain/entities/create_draft_plan_params.dart';
 import '../models/draft_plan_model.dart';
 import '../models/draft_plan_detail_model.dart';
 
 abstract class DraftPlanRemoteDataSource {
   Future<List<DraftPlanModel>> getDraftPlans();
   Future<DraftPlanDetailModel> getDraftPlanDetail(String id);
+  Future<DraftPlanModel> createDraftPlan(CreateDraftPlanParams params);
 }
 
 /// Mock implementation — returns hardcoded data matching the design screenshot.
@@ -56,6 +58,22 @@ class DraftPlanRemoteMockDataSource implements DraftPlanRemoteDataSource {
         updatedAt: DateTime.now().subtract(const Duration(days: 3)),
       ),
     ];
+  }
+
+  @override
+  Future<DraftPlanModel> createDraftPlan(CreateDraftPlanParams params) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return DraftPlanModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: params.name,
+      description: params.description,
+      thumbnailUrl:
+          'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/axe.png',
+      picks: params.pickHeroIds.length,
+      bans: params.banHeroIds.length,
+      threats: params.threatEntries.length,
+      updatedAt: DateTime.now(),
+    );
   }
 
   @override
@@ -150,6 +168,13 @@ class DraftPlanRemoteApiDataSource implements DraftPlanRemoteDataSource {
   Future<DraftPlanDetailModel> getDraftPlanDetail(String id) async {
     // final response = await _dio.get('/draft-plans/$id');
     // return DraftPlanDetailModel.fromJson(response.data['data']);
+    throw UnimplementedError('Wire up DioClient and implement real API call.');
+  }
+
+  @override
+  Future<DraftPlanModel> createDraftPlan(CreateDraftPlanParams params) async {
+    // final response = await _dio.post('/draft-plans', data: {...});
+    // return DraftPlanModel.fromJson(response.data['data']);
     throw UnimplementedError('Wire up DioClient and implement real API call.');
   }
 }

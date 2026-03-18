@@ -5,9 +5,11 @@ import 'package:dota2_draft_plan_mobile/core/theme/app_colors.dart';
 import 'package:dota2_draft_plan_mobile/core/theme/app_text_styles.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_plan_list_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_plan_list_state.dart';
+import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/create_draft_plan_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/widgets/draft_plan_card.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/widgets/app_bottom_nav_bar.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/pages/draft_plan_detail_page.dart';
+import 'package:dota2_draft_plan_mobile/features/draft/presentation/pages/create_draft_plan_page.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_plan_detail_cubit.dart';
 import 'package:dota2_draft_plan_mobile/core/di/injection_container.dart' as di;
 
@@ -227,7 +229,24 @@ class _DraftPlanListPageState extends State<DraftPlanListPage> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(28),
-          onTap: () {},
+          onTap: () async {
+            final listCubit = context.read<DraftPlanListCubit>();
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (ctx) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create: (ctx2) => di.sl<CreateDraftPlanCubit>(),
+                    ),
+                  ],
+                  child: const CreateDraftPlanPage(),
+                ),
+              ),
+            );
+            // Refresh list after returning from creation wizard
+            listCubit.refresh();
+          },
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
