@@ -17,6 +17,7 @@ class AuthRepositoryImpl implements AuthRepository {
     // The data source returns a UserModel, which extends User.
     final user = await remoteDataSource.login(email, password);
     await localDataSource.cacheToken(user.token);
+    await localDataSource.cacheUser(user);
     return user;
   }
 
@@ -34,6 +35,7 @@ class AuthRepositoryImpl implements AuthRepository {
       passwordConfirmation,
     );
     await localDataSource.cacheToken(user.token);
+    await localDataSource.cacheUser(user);
     return user;
   }
 
@@ -47,5 +49,10 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> logout() async {
     await remoteDataSource.logout();
     await localDataSource.removeToken();
+  }
+
+  @override
+  Future<User?> getCachedUser() async {
+    return await localDataSource.getCachedUser();
   }
 }

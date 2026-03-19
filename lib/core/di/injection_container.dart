@@ -15,6 +15,7 @@ import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_plan_detail_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/hero_browser_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/create_draft_plan_cubit.dart';
+import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/heroes_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/domain/usecases/update_draft_item_usecases.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/edit_draft_item_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/data/datasources/auth_remote_datasource.dart';
@@ -24,6 +25,7 @@ import 'package:dota2_draft_plan_mobile/features/auth/domain/usecases/login_usec
 import 'package:dota2_draft_plan_mobile/features/auth/domain/usecases/register_usecase.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/domain/usecases/check_auth_status_usecase.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:dota2_draft_plan_mobile/features/auth/domain/usecases/get_cached_user.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/presentation/cubit/register_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/presentation/cubit/splash_cubit.dart';
@@ -90,12 +92,14 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
   sl.registerLazySingleton(() => CheckAuthStatusUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
+  sl.registerLazySingleton(() => GetCachedUser(sl()));
 
   // ------- Cubits (factory — new instance per page) -------
   sl.registerFactory(() => SplashCubit(checkAuthStatusUseCase: sl()));
   sl.registerFactory(() => DraftPlanListCubit(sl(), sl()));
   sl.registerFactory(() => DraftPlanDetailCubit(getDraftPlanDetail: sl()));
   sl.registerFactory(() => HeroBrowserCubit(sl()));
+  sl.registerFactory(() => HeroesCubit(getHeroesUseCase: sl()));
   sl.registerFactory(() => CreateDraftPlanCubit(sl(), sl(), sl(), sl()));
   sl.registerFactory(
     () => EditDraftItemCubit(

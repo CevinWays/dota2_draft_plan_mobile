@@ -10,4 +10,5 @@ abstract class AuthRepository {
   );
   Future<bool> checkAuthStatus();
   Future<void> logout();
+  Future<User?> getCachedUser();
 }

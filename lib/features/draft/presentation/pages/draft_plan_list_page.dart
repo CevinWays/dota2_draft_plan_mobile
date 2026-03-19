@@ -10,7 +10,10 @@ import 'package:dota2_draft_plan_mobile/features/draft/presentation/widgets/draf
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/widgets/app_bottom_nav_bar.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/pages/draft_plan_detail_page.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/pages/create_draft_plan_page.dart';
+import 'package:dota2_draft_plan_mobile/features/draft/presentation/pages/heroes_page.dart';
+import 'package:dota2_draft_plan_mobile/features/auth/presentation/pages/profile_page.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_plan_detail_cubit.dart';
+import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/heroes_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/presentation/pages/login_page.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:dota2_draft_plan_mobile/core/di/injection_container.dart' as di;
@@ -49,16 +52,38 @@ class _DraftPlanListPageState extends State<DraftPlanListPage> {
       },
       child: Scaffold(
         backgroundColor: AppColors.background,
-        appBar: _buildAppBar(),
-        body: _buildBody(),
+        body: _buildPageContent(),
         bottomNavigationBar: AppBottomNavBar(
           currentIndex: _currentNavIndex,
           onTap: (i) => setState(() => _currentNavIndex = i),
         ),
-        floatingActionButton: _buildFab(),
+        floatingActionButton: _currentNavIndex == 0 ? _buildFab() : null,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
+  }
+
+  Widget _buildPageContent() {
+    switch (_currentNavIndex) {
+      case 0:
+        return Column(
+          children: [
+            _buildAppBar(),
+            Expanded(child: _buildDraftsList()),
+          ],
+        );
+      case 1:
+        return BlocProvider(
+          create: (context) => di.sl<HeroesCubit>(),
+          child: const HeroesPage(),
+        );
+      case 2:
+        return const Center(child: Text('Items Coming Soon', style: TextStyle(color: Colors.white70)));
+      case 3:
+        return const ProfilePage();
+      default:
+        return const Center(child: Text('Unknown Page'));
+    }
   }
 
   PreferredSizeWidget _buildAppBar() {
@@ -104,7 +129,7 @@ class _DraftPlanListPageState extends State<DraftPlanListPage> {
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildDraftsList() {
     return BlocBuilder<DraftPlanListCubit, DraftPlanListState>(
       builder: (context, state) {
         if (state is DraftPlanListLoading || state is DraftPlanListInitial) {
