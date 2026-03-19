@@ -15,6 +15,7 @@ import '../widgets/modals/edit_preferred_pick_modal.dart';
 import 'draft_summary_page.dart';
 import '../../../../core/di/injection_container.dart';
 import '../cubit/edit_draft_item_cubit.dart';
+import '../../domain/usecases/update_draft_item_usecases.dart';
 
 class DraftPlanDetailPage extends StatefulWidget {
   final String planId;
@@ -192,7 +193,8 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                             builder: (_) => BlocProvider(
                               create: (_) => sl<EditDraftItemCubit>(),
                               child: EditBanHeroModal(
-                                planId: widget.planId,
+                                draftPlanId: widget.planId,
+                                itemId: ban.id,
                                 heroId: ban.heroId,
                                 heroName: ban.heroName,
                                 heroIcon: ban.heroIcon,
@@ -207,7 +209,19 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                                 .fetchDraftPlanDetail(widget.planId);
                           }
                         },
-                        onDelete: () {},
+                        onDelete: () async {
+                          final confirmed = await _confirmDelete(context, ban.heroName);
+                          if (confirmed == true && context.mounted) {
+                            final cubit = sl<EditDraftItemCubit>();
+                            await cubit.submitBanDelete(DeleteItemParams(
+                              draftPlanId: widget.planId,
+                              itemId: ban.id,
+                            ));
+                            if (context.mounted) {
+                              context.read<DraftPlanDetailCubit>().fetchDraftPlanDetail(widget.planId);
+                            }
+                          }
+                        },
                       ),
                     ),
 
@@ -228,7 +242,6 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                         heroName: pick.heroName,
                         heroIcon: pick.heroIcon,
                         priority: pick.priority,
-                        role: pick.role,
                         note: pick.note,
                         onEdit: () async {
                           final result = await showModalBottomSheet<bool>(
@@ -243,11 +256,11 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                             builder: (_) => BlocProvider(
                               create: (_) => sl<EditDraftItemCubit>(),
                               child: EditPreferredPickModal(
-                                planId: widget.planId,
+                                draftPlanId: widget.planId,
+                                itemId: pick.id,
                                 heroId: pick.heroId,
                                 heroName: pick.heroName,
                                 heroIcon: pick.heroIcon,
-                                initialRole: pick.role,
                                 initialPriority: pick.priority,
                                 initialNote: pick.note,
                               ),
@@ -260,7 +273,19 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                                 .fetchDraftPlanDetail(widget.planId);
                           }
                         },
-                        onDelete: () {},
+                        onDelete: () async {
+                          final confirmed = await _confirmDelete(context, pick.heroName);
+                          if (confirmed == true && context.mounted) {
+                            final cubit = sl<EditDraftItemCubit>();
+                            await cubit.submitPickDelete(DeleteItemParams(
+                              draftPlanId: widget.planId,
+                              itemId: pick.id,
+                            ));
+                            if (context.mounted) {
+                              context.read<DraftPlanDetailCubit>().fetchDraftPlanDetail(widget.planId);
+                            }
+                          }
+                        },
                       ),
                     ),
 
@@ -294,10 +319,12 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                             builder: (_) => BlocProvider(
                               create: (_) => sl<EditDraftItemCubit>(),
                               child: EditEnemyThreatModal(
-                                planId: widget.planId,
+                                draftPlanId: widget.planId,
+                                itemId: threat.id,
                                 heroId: threat.heroId,
                                 heroName: threat.heroName,
                                 heroIcon: threat.heroIcon,
+                                initialThreatLevel: threat.threatLevel,
                                 initialNote: threat.note,
                               ),
                             ),
@@ -309,7 +336,19 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                                 .fetchDraftPlanDetail(widget.planId);
                           }
                         },
-                        onDelete: () {},
+                        onDelete: () async {
+                          final confirmed = await _confirmDelete(context, threat.heroName);
+                          if (confirmed == true && context.mounted) {
+                            final cubit = sl<EditDraftItemCubit>();
+                            await cubit.submitThreatDelete(DeleteItemParams(
+                              draftPlanId: widget.planId,
+                              itemId: threat.id,
+                            ));
+                            if (context.mounted) {
+                              context.read<DraftPlanDetailCubit>().fetchDraftPlanDetail(widget.planId);
+                            }
+                          }
+                        },
                       ),
                     ),
 
@@ -327,9 +366,9 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                   else
                     ...detail.itemTimings.map(
                       (timing) => ItemTimingRow(
-                        label: timing.label,
-                        targetTime: timing.targetTime,
-                        explanation: timing.explanation,
+                        label: timing.itemName,
+                        targetTime: timing.minuteMark.toString(),
+                        explanation: timing.note ?? '',
                         onEdit: () async {
                           final result = await showModalBottomSheet<bool>(
                             context: context,
@@ -343,10 +382,11 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                             builder: (_) => BlocProvider(
                               create: (_) => sl<EditDraftItemCubit>(),
                               child: EditItemTimingModal(
-                                planId: widget.planId,
-                                initialLabel: timing.label,
-                                initialTargetTime: timing.targetTime,
-                                initialExplanation: timing.explanation,
+                                draftPlanId: widget.planId,
+                                itemId: timing.id,
+                                itemName: timing.itemName,
+                                initialMinuteMark: timing.minuteMark,
+                                initialNote: timing.note,
                               ),
                             ),
                           );
@@ -367,6 +407,30 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
 
           return const SizedBox.shrink();
         },
+      ),
+    );
+  }
+
+  Future<bool?> _confirmDelete(BuildContext context, String itemName) {
+    return showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surfaceVariant,
+        title: const Text('Confirm Delete', style: TextStyle(color: Colors.white)),
+        content: Text(
+          'Delete "$itemName" from this draft plan?',
+          style: const TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+          ),
+        ],
       ),
     );
   }

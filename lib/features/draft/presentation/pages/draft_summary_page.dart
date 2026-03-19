@@ -177,7 +177,7 @@ class _DraftSummaryPageState extends State<DraftSummaryPage>
                         heroName: pick.heroName,
                         heroIconUrl: pick.heroIcon,
                         priority: pick.priority,
-                        role: pick.role ?? '',
+                        role: '',
                         note: pick.note ?? '',
                       ),
                     ),
@@ -231,9 +231,9 @@ class _DraftSummaryPageState extends State<DraftSummaryPage>
                       itemBuilder: (context, index) {
                         final timing = detail.itemTimings[index];
                         return SummaryTimingCard(
-                          targetTime: timing.targetTime,
-                          label: timing.label,
-                          explanation: timing.explanation,
+                          targetTime: timing.minuteMark.toString(),
+                          label: timing.itemName,
+                          explanation: timing.note ?? '',
                         );
                       },
                     ),

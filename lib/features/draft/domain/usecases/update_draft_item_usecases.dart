@@ -1,94 +1,191 @@
 import '../repositories/draft_plan_repository.dart';
 
-class UpdateBanParams {
-  final String planId;
-  final int
-  heroId; // Or draft_plan_ban internal ID if needed, but heroId is unique per plan
+// ─── Params for ADD operations ────────────────────────────────────────────────
+
+class AddBanParams {
+  final String draftPlanId;
+  final List<int> heroIds;
   final String note;
+  final int sortOrder;
+
+  const AddBanParams({
+    required this.draftPlanId,
+    required this.heroIds,
+    this.note = '',
+    this.sortOrder = 1,
+  });
+}
+
+class AddPickParams {
+  final String draftPlanId;
+  final List<int> heroIds;
+  final String note;
+  final int priority;
+  final int sortOrder;
+
+  const AddPickParams({
+    required this.draftPlanId,
+    required this.heroIds,
+    this.note = '',
+    this.priority = 1,
+    this.sortOrder = 1,
+  });
+}
+
+class AddThreatParams {
+  final String draftPlanId;
+  final List<int> heroIds;
+  final String note;
+  final int threatLevel;
+  final int sortOrder;
+
+  const AddThreatParams({
+    required this.draftPlanId,
+    required this.heroIds,
+    this.note = '',
+    this.threatLevel = 1,
+    this.sortOrder = 1,
+  });
+}
+
+// ─── Params for UPDATE operations ─────────────────────────────────────────────
+
+class UpdateBanParams {
+  final String draftPlanId;
+  final int itemId;
+  final int heroId;
+  final String note;
+  final int sortOrder;
 
   const UpdateBanParams({
-    required this.planId,
+    required this.draftPlanId,
+    required this.itemId,
     required this.heroId,
-    required this.note,
+    this.note = '',
+    this.sortOrder = 1,
   });
 }
 
 class UpdatePickParams {
-  final String planId;
+  final String draftPlanId;
+  final int itemId;
   final int heroId;
-  final String role;
-  final String priority;
+  final int priority;
   final String note;
+  final int sortOrder;
 
   const UpdatePickParams({
-    required this.planId,
+    required this.draftPlanId,
+    required this.itemId,
     required this.heroId,
-    required this.role,
-    required this.priority,
-    required this.note,
+    this.priority = 1,
+    this.note = '',
+    this.sortOrder = 1,
   });
 }
 
 class UpdateThreatParams {
-  final String planId;
+  final String draftPlanId;
+  final int itemId;
   final int heroId;
+  final int threatLevel;
   final String note;
+  final int sortOrder;
 
   const UpdateThreatParams({
-    required this.planId,
+    required this.draftPlanId,
+    required this.itemId,
     required this.heroId,
-    required this.note,
+    this.threatLevel = 1,
+    this.note = '',
+    this.sortOrder = 1,
   });
 }
 
 class UpdateTimingParams {
-  final String planId;
-  final String originalLabel; // Assuming label is the unique identifier for now
-  final String newLabel;
-  final String targetTime;
-  final String explanation;
+  final String draftPlanId;
+  final int itemId;
+  final int minuteMark;
+  final String note;
 
   const UpdateTimingParams({
-    required this.planId,
-    required this.originalLabel,
-    required this.newLabel,
-    required this.targetTime,
-    required this.explanation,
+    required this.draftPlanId,
+    required this.itemId,
+    required this.minuteMark,
+    this.note = '',
   });
+}
+
+// ─── Params for DELETE operations ─────────────────────────────────────────────
+
+class DeleteItemParams {
+  final String draftPlanId;
+  final int itemId;
+
+  const DeleteItemParams({
+    required this.draftPlanId,
+    required this.itemId,
+  });
+}
+
+// ─── Use Cases ────────────────────────────────────────────────────────────────
+
+class AddDraftPlanBan {
+  final DraftPlanRepository repository;
+  AddDraftPlanBan(this.repository);
+  Future<void> call(AddBanParams params) => repository.addBan(params);
+}
+
+class AddDraftPlanPreferredPick {
+  final DraftPlanRepository repository;
+  AddDraftPlanPreferredPick(this.repository);
+  Future<void> call(AddPickParams params) => repository.addPreferredPick(params);
+}
+
+class AddDraftPlanEnemyThreat {
+  final DraftPlanRepository repository;
+  AddDraftPlanEnemyThreat(this.repository);
+  Future<void> call(AddThreatParams params) => repository.addEnemyThreat(params);
 }
 
 class UpdateDraftPlanBan {
   final DraftPlanRepository repository;
   UpdateDraftPlanBan(this.repository);
-
-  Future<void> call(UpdateBanParams params) {
-    return repository.updateBan(params);
-  }
+  Future<void> call(UpdateBanParams params) => repository.updateBan(params);
 }
 
 class UpdateDraftPlanPreferredPick {
   final DraftPlanRepository repository;
   UpdateDraftPlanPreferredPick(this.repository);
-
-  Future<void> call(UpdatePickParams params) {
-    return repository.updatePreferredPick(params);
-  }
+  Future<void> call(UpdatePickParams params) => repository.updatePreferredPick(params);
 }
 
 class UpdateDraftPlanEnemyThreat {
   final DraftPlanRepository repository;
   UpdateDraftPlanEnemyThreat(this.repository);
-
-  Future<void> call(UpdateThreatParams params) {
-    return repository.updateEnemyThreat(params);
-  }
+  Future<void> call(UpdateThreatParams params) => repository.updateEnemyThreat(params);
 }
 
 class UpdateDraftPlanItemTiming {
   final DraftPlanRepository repository;
   UpdateDraftPlanItemTiming(this.repository);
+  Future<void> call(UpdateTimingParams params) => repository.updateItemTiming(params);
+}
 
-  Future<void> call(UpdateTimingParams params) {
-    return repository.updateItemTiming(params);
-  }
+class DeleteDraftPlanBan {
+  final DraftPlanRepository repository;
+  DeleteDraftPlanBan(this.repository);
+  Future<void> call(DeleteItemParams params) => repository.deleteBan(params);
+}
+
+class DeleteDraftPlanPreferredPick {
+  final DraftPlanRepository repository;
+  DeleteDraftPlanPreferredPick(this.repository);
+  Future<void> call(DeleteItemParams params) => repository.deletePreferredPick(params);
+}
+
+class DeleteDraftPlanEnemyThreat {
+  final DraftPlanRepository repository;
+  DeleteDraftPlanEnemyThreat(this.repository);
+  Future<void> call(DeleteItemParams params) => repository.deleteEnemyThreat(params);
 }

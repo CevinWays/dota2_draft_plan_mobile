@@ -12,28 +12,31 @@ class DraftPlanDetailModel extends DraftPlanDetail {
   });
 
   factory DraftPlanDetailModel.fromJson(Map<String, dynamic> json) {
+    // Determine data node if wrapped in "data"
+    final dataNode = json['data'] as Map<String, dynamic>? ?? json;
+
     return DraftPlanDetailModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      overview: json['overview'] as String?,
+      id: dataNode['id']?.toString() ?? '',
+      name: dataNode['title']?.toString() ?? dataNode['name']?.toString() ?? '',
+      overview: dataNode['strategy_notes']?.toString() ?? dataNode['overview']?.toString(),
       bans:
           (json['bans'] as List?)
-              ?.map((e) => DraftPlanBanModel.fromJson(e))
+              ?.map((e) => DraftPlanBanModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
       preferredPicks:
-          (json['preferred_picks'] as List?)
-              ?.map((e) => DraftPlanPreferredPickModel.fromJson(e))
+          (json['preferredPicks'] as List?)
+              ?.map((e) => DraftPlanPreferredPickModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
       enemyThreats:
-          (json['enemy_threats'] as List?)
-              ?.map((e) => DraftPlanEnemyThreatModel.fromJson(e))
+          (json['enemyThreats'] as List?)
+              ?.map((e) => DraftPlanEnemyThreatModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
       itemTimings:
-          (json['item_timings'] as List?)
-              ?.map((e) => DraftPlanItemTimingModel.fromJson(e))
+          (json['itemTimings'] as List?)
+              ?.map((e) => DraftPlanItemTimingModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
     );
@@ -42,74 +45,96 @@ class DraftPlanDetailModel extends DraftPlanDetail {
 
 class DraftPlanBanModel extends DraftPlanBan {
   const DraftPlanBanModel({
+    required super.id,
     required super.heroId,
     required super.heroName,
     required super.heroIcon,
+    required super.sortOrder,
     super.note,
   });
 
   factory DraftPlanBanModel.fromJson(Map<String, dynamic> json) {
+    final heroObj = json['hero'] as Map<String, dynamic>?;
     return DraftPlanBanModel(
-      heroId: (json['hero_id'] as num).toInt(),
-      heroName: json['hero_name'] as String,
-      heroIcon: json['hero_icon'] as String,
-      note: json['note'] as String?,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      heroId: (json['hero_id'] as num?)?.toInt() ?? 0,
+      heroName: heroObj?['localized_name']?.toString() ?? 'Hero ${json['hero_id']}',
+      heroIcon: heroObj?['icon']?.toString() ?? '',
+      sortOrder: (json['sort_order'] as num?)?.toInt() ?? 0,
+      note: json['note']?.toString(),
     );
   }
 }
 
 class DraftPlanPreferredPickModel extends DraftPlanPreferredPick {
   const DraftPlanPreferredPickModel({
+    required super.id,
     required super.heroId,
     required super.heroName,
     required super.heroIcon,
     required super.priority,
-    super.role,
+    required super.sortOrder,
     super.note,
   });
 
   factory DraftPlanPreferredPickModel.fromJson(Map<String, dynamic> json) {
+    final intPriority = (json['priority'] as num?)?.toInt() ?? 1;
+    String priorityStr = 'LOW';
+    if (intPriority == 2) priorityStr = 'MEDIUM';
+    if (intPriority == 3) priorityStr = 'HIGH';
+
+    final heroObj = json['hero'] as Map<String, dynamic>?;
     return DraftPlanPreferredPickModel(
-      heroId: (json['hero_id'] as num).toInt(),
-      heroName: json['hero_name'] as String,
-      heroIcon: json['hero_icon'] as String,
-      priority: json['priority'] as String,
-      role: json['role'] as String?,
-      note: json['note'] as String?,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      heroId: (json['hero_id'] as num?)?.toInt() ?? 0,
+      heroName: heroObj?['localized_name']?.toString() ?? 'Hero ${json['hero_id']}',
+      heroIcon: heroObj?['icon']?.toString() ?? '',
+      priority: priorityStr,
+      sortOrder: (json['sort_order'] as num?)?.toInt() ?? 0,
+      note: json['note']?.toString(),
     );
   }
 }
 
 class DraftPlanEnemyThreatModel extends DraftPlanEnemyThreat {
   const DraftPlanEnemyThreatModel({
+    required super.id,
     required super.heroId,
     required super.heroName,
     required super.heroIcon,
+    required super.threatLevel,
+    required super.sortOrder,
     super.note,
   });
 
   factory DraftPlanEnemyThreatModel.fromJson(Map<String, dynamic> json) {
+    final heroObj = json['hero'] as Map<String, dynamic>?;
     return DraftPlanEnemyThreatModel(
-      heroId: (json['hero_id'] as num).toInt(),
-      heroName: json['hero_name'] as String,
-      heroIcon: json['hero_icon'] as String,
-      note: json['note'] as String?,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      heroId: (json['hero_id'] as num?)?.toInt() ?? 0,
+      heroName: heroObj?['localized_name']?.toString() ?? 'Hero ${json['hero_id']}',
+      heroIcon: heroObj?['icon']?.toString() ?? '',
+      threatLevel: (json['threat_level'] as num?)?.toInt() ?? 1,
+      sortOrder: (json['sort_order'] as num?)?.toInt() ?? 0,
+      note: json['note']?.toString(),
     );
   }
 }
 
 class DraftPlanItemTimingModel extends DraftPlanItemTiming {
   const DraftPlanItemTimingModel({
-    required super.label,
-    required super.targetTime,
-    required super.explanation,
+    required super.id,
+    required super.itemName,
+    required super.minuteMark,
+    super.note,
   });
 
   factory DraftPlanItemTimingModel.fromJson(Map<String, dynamic> json) {
     return DraftPlanItemTimingModel(
-      label: json['label'] as String,
-      targetTime: json['target_time'] as String,
-      explanation: json['explanation'] as String,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      itemName: json['item_name']?.toString() ?? 'Unknown Item',
+      minuteMark: (json['minute_mark'] as num?)?.toInt() ?? 0,
+      note: json['note']?.toString(),
     );
   }
 }

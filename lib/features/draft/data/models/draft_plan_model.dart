@@ -14,14 +14,14 @@ class DraftPlanModel extends DraftPlan {
 
   factory DraftPlanModel.fromJson(Map<String, dynamic> json) {
     return DraftPlanModel(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      thumbnailUrl: json['thumbnail_url'] as String,
-      picks: (json['picks'] as num).toInt(),
-      bans: (json['bans'] as num).toInt(),
-      threats: (json['threats'] as num).toInt(),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      id: json['id']?.toString() ?? '',
+      title: json['title']?.toString() ?? json['name']?.toString() ?? '',
+      description: json['strategy_notes']?.toString() ?? json['description']?.toString() ?? '',
+      thumbnailUrl: json['thumbnail_url']?.toString() ?? '',
+      picks: (json['picks'] as num?)?.toInt() ?? 0,
+      bans: (json['bans'] as num?)?.toInt() ?? 0,
+      threats: (json['threats'] as num?)?.toInt() ?? 0,
+      updatedAt: DateTime.tryParse(json['updated_at']?.toString() ?? '') ?? DateTime.now(),
     );
   }
 

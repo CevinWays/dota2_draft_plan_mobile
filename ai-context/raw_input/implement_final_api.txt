@@ -1,0 +1,507 @@
+this file contain all the api endpoint that we should implement to this flutter project
+please consider to check all data model from this features :
+1. Auth
+2. Draft Plan List
+3. Draft Plan Detail
+4. Create Draft Plan
+5. Hero
+6. Edit Draft Plan (ban hero, preferred pick, enemy threat, itemTimings)
+
+ENDPOINT : http://127.0.0.1:8000/api/register
+METHOD : POST
+BODY : 
+{
+  "name": "adi",
+  "email" : "adi@test.com",
+  "password" : "1234567890",
+  "password_confirmation": "1234567890"
+}
+RESPONSE :
+{
+  "data": {
+    "name": "Anggun",
+    "email": "anggun@gmail.com",
+    "updated_at": "2026-03-19T02:02:25.000000Z",
+    "created_at": "2026-03-19T02:02:25.000000Z",
+    "id": 2
+  },
+  "access_token": "2|8uOa5SbhZPmlKAuz5vzKIcs5LJtN9kHiL3XyIwDRcef574c0",
+  "token_type": "Bearer"
+}
+
+
+ENDPOINT : http://127.0.0.1:8000/api/login
+METHOD : POST
+BODY : 
+{
+  "email" : "adi@test.com",
+  "password": "1234567890"
+}
+RESPONSE:
+{
+  "data": {
+    "id": 1,
+    "name": "Cevin",
+    "email": "cevinways34@gmail.com",
+    "email_verified_at": null,
+    "created_at": "2026-03-19T02:01:04.000000Z",
+    "updated_at": "2026-03-19T02:01:04.000000Z"
+  },
+  "access_token": "3|HMmTB4rbEuBwYTAKJmmm2m3FnHE6saT2G4Bc7uaj7455f019",
+  "token_type": "Bearer"
+}
+
+
+ENDPOINT : http://127.0.0.1:8000/api/draft-plans
+METHOD : POST
+BODY:
+{
+  "title" : "Patch 7.38c Pos 2 Plan",
+  "patch_version": "7.38c",
+  "strategy_notes": "Attack lane oriented draft plan"
+}
+RESPONSE :
+{
+  "data": {
+    "title": "Patch 7.38c Pos 2 Plan",
+    "patch_version": "7.38c",
+    "strategy_notes": "Attack lane oriented draft plan",
+    "user_id": 3,
+    "updated_at": "2026-03-19T04:32:59.000000Z",
+    "created_at": "2026-03-19T04:32:59.000000Z",
+    "id": 2
+  }
+}
+
+ENDPOINT : http://127.0.0.1:8000/api/draft-plans/1/bans
+METHOD : POST
+BODY : 
+{
+  "hero_ids": [9, 10],
+  "note": "Comfort hero for carry",
+  "sort_order": 1
+}
+RESPONSE :
+{
+  "data": [
+    {
+      "hero_id": 9,
+      "note": "Comfort hero for carry",
+      "sort_order": 1,
+      "draft_plan_id": 1,
+      "updated_at": "2026-03-19T04:15:01.000000Z",
+      "created_at": "2026-03-19T04:15:01.000000Z",
+      "id": 2,
+      "hero": {
+        "id": 9,
+        "opendota_hero_id": 9,
+        "name": "npc_dota_hero_mirana",
+        "localized_name": "Mirana",
+        "primary_attr": "agi",
+        "attack_type": "Ranged",
+        "roles": [
+          "Carry",
+          "Support",
+          "Escape",
+          "Nuker",
+          "Disabler"
+        ],
+        "image": null,
+        "icon": null,
+        "created_at": "2026-03-19T01:54:19.000000Z",
+        "updated_at": "2026-03-19T01:54:19.000000Z"
+      }
+    },
+    {
+      "hero_id": 10,
+      "note": "Comfort hero for carry",
+      "sort_order": 1,
+      "draft_plan_id": 1,
+      "updated_at": "2026-03-19T04:15:01.000000Z",
+      "created_at": "2026-03-19T04:15:01.000000Z",
+      "id": 3,
+      "hero": {
+        "id": 10,
+        "opendota_hero_id": 10,
+        "name": "npc_dota_hero_morphling",
+        "localized_name": "Morphling",
+        "primary_attr": "agi",
+        "attack_type": "Ranged",
+        "roles": [
+          "Carry",
+          "Escape",
+          "Durable",
+          "Nuker",
+          "Disabler"
+        ],
+        "image": null,
+        "icon": null,
+        "created_at": "2026-03-19T01:54:19.000000Z",
+        "updated_at": "2026-03-19T01:54:19.000000Z"
+      }
+    }
+  ]
+}
+
+ENDPOINT : http://127.0.0.1:8000/api/draft-plans/1/preferred-picks
+METHOD : POST
+BODY :
+{
+  "hero_ids": [1, 2],
+  "note": "Comfort hero for carry",
+  "priority": 1,
+  "sort_order": 1
+}
+RESPONSE :
+{
+  "data": [
+    {
+      "hero_id": 1,
+      "note": "Comfort hero for carry",
+      "priority": 1,
+      "sort_order": 1,
+      "draft_plan_id": 1,
+      "updated_at": "2026-03-19T04:12:17.000000Z",
+      "created_at": "2026-03-19T04:12:17.000000Z",
+      "id": 2,
+      "hero": {
+        "id": 1,
+        "opendota_hero_id": 1,
+        "name": "npc_dota_hero_antimage",
+        "localized_name": "Anti-Mage",
+        "primary_attr": "agi",
+        "attack_type": "Melee",
+        "roles": [
+          "Carry",
+          "Escape",
+          "Nuker"
+        ],
+        "image": null,
+        "icon": null,
+        "created_at": "2026-03-19T01:54:19.000000Z",
+        "updated_at": "2026-03-19T01:54:19.000000Z"
+      }
+    },
+    {
+      "hero_id": 2,
+      "note": "Comfort hero for carry",
+      "priority": 1,
+      "sort_order": 1,
+      "draft_plan_id": 1,
+      "updated_at": "2026-03-19T04:12:17.000000Z",
+      "created_at": "2026-03-19T04:12:17.000000Z",
+      "id": 3,
+      "hero": {
+        "id": 2,
+        "opendota_hero_id": 2,
+        "name": "npc_dota_hero_axe",
+        "localized_name": "Axe",
+        "primary_attr": "str",
+        "attack_type": "Melee",
+        "roles": [
+          "Initiator",
+          "Durable",
+          "Disabler",
+          "Carry"
+        ],
+        "image": null,
+        "icon": null,
+        "created_at": "2026-03-19T01:54:19.000000Z",
+        "updated_at": "2026-03-19T01:54:19.000000Z"
+      }
+    }
+  ]
+}
+
+ENDPOINT : http://127.0.0.1:8000/api/draft-plans/1/enemy-threats
+METHOD : POST
+BODY :
+{
+  "hero_ids": [7, 8],
+  "note": "Comfort hero for carry",
+  "threat_level": 1,
+  "sort_order": 1
+}
+RESPONSE:
+{
+  "data": [
+    {
+      "hero_id": 7,
+      "note": "Comfort hero for carry",
+      "threat_level": 1,
+      "sort_order": 1,
+      "draft_plan_id": 1,
+      "updated_at": "2026-03-19T04:13:42.000000Z",
+      "created_at": "2026-03-19T04:13:42.000000Z",
+      "id": 2,
+      "hero": {
+        "id": 7,
+        "opendota_hero_id": 7,
+        "name": "npc_dota_hero_earthshaker",
+        "localized_name": "Earthshaker",
+        "primary_attr": "str",
+        "attack_type": "Melee",
+        "roles": [
+          "Support",
+          "Initiator",
+          "Disabler",
+          "Nuker"
+        ],
+        "image": null,
+        "icon": null,
+        "created_at": "2026-03-19T01:54:19.000000Z",
+        "updated_at": "2026-03-19T01:54:19.000000Z"
+      }
+    },
+    {
+      "hero_id": 8,
+      "note": "Comfort hero for carry",
+      "threat_level": 1,
+      "sort_order": 1,
+      "draft_plan_id": 1,
+      "updated_at": "2026-03-19T04:13:42.000000Z",
+      "created_at": "2026-03-19T04:13:42.000000Z",
+      "id": 3,
+      "hero": {
+        "id": 8,
+        "opendota_hero_id": 8,
+        "name": "npc_dota_hero_juggernaut",
+        "localized_name": "Juggernaut",
+        "primary_attr": "agi",
+        "attack_type": "Melee",
+        "roles": [
+          "Carry",
+          "Pusher",
+          "Escape"
+        ],
+        "image": null,
+        "icon": null,
+        "created_at": "2026-03-19T01:54:19.000000Z",
+        "updated_at": "2026-03-19T01:54:19.000000Z"
+      }
+    }
+  ]
+}
+
+ENDPOINT : http://127.0.0.1:8000/api/draft-plans/2
+METHOD : GET
+RESPONSE : 
+{
+  "data": {
+    "id": 2,
+    "user_id": 3,
+    "title": "Patch 7.38c Pos 2 Plan",
+    "patch_version": "7.38c",
+    "strategy_notes": "Attack lane oriented draft plan",
+    "created_at": "2026-03-19T04:32:59.000000Z",
+    "updated_at": "2026-03-19T04:32:59.000000Z"
+  },
+  "bans": [
+    {
+      "id": 4,
+      "draft_plan_id": 2,
+      "hero_id": 9,
+      "note": "Comfort hero for carry",
+      "sort_order": 1,
+      "created_at": "2026-03-19T04:38:48.000000Z",
+      "updated_at": "2026-03-19T04:38:48.000000Z"
+    },
+    {
+      "id": 5,
+      "draft_plan_id": 2,
+      "hero_id": 10,
+      "note": "Comfort hero for carry",
+      "sort_order": 1,
+      "created_at": "2026-03-19T04:38:48.000000Z",
+      "updated_at": "2026-03-19T04:38:48.000000Z"
+    }
+  ],
+  "preferredPicks": [
+    {
+      "id": 4,
+      "draft_plan_id": 2,
+      "hero_id": 1,
+      "note": "Comfort hero for carry",
+      "priority": 1,
+      "sort_order": 1,
+      "created_at": "2026-03-19T04:38:57.000000Z",
+      "updated_at": "2026-03-19T04:38:57.000000Z"
+    },
+    {
+      "id": 5,
+      "draft_plan_id": 2,
+      "hero_id": 2,
+      "note": "Comfort hero for carry",
+      "priority": 1,
+      "sort_order": 1,
+      "created_at": "2026-03-19T04:38:57.000000Z",
+      "updated_at": "2026-03-19T04:38:57.000000Z"
+    }
+  ],
+  "enemyThreats": [
+    {
+      "id": 4,
+      "draft_plan_id": 2,
+      "hero_id": 7,
+      "note": "Comfort hero for carry",
+      "threat_level": 1,
+      "sort_order": 1,
+      "created_at": "2026-03-19T04:39:07.000000Z",
+      "updated_at": "2026-03-19T04:39:07.000000Z"
+    },
+    {
+      "id": 5,
+      "draft_plan_id": 2,
+      "hero_id": 8,
+      "note": "Comfort hero for carry",
+      "threat_level": 1,
+      "sort_order": 1,
+      "created_at": "2026-03-19T04:39:07.000000Z",
+      "updated_at": "2026-03-19T04:39:07.000000Z"
+    }
+  ],
+  "itemTimings": [
+    {
+      "id": 2,
+      "draft_plan_id": 2,
+      "minute_mark": 20,
+      "item_name": "Yellow Claw",
+      "note": "If lane is Safe",
+      "sort_order": 1,
+      "created_at": "2026-03-19T04:40:21.000000Z",
+      "updated_at": "2026-03-19T04:40:21.000000Z"
+    }
+  ]
+}
+
+ENDPOINT : http://127.0.0.1:8000/api/draft-plans/2/bans/4/
+METHOD : PUT
+BODY:
+{
+  "hero_id": 4,
+  "note": "Comfort hero for carry",
+  "sort_order": 1
+}
+RESPONSE:
+{
+  "data": {
+    "id": 4,
+    "draft_plan_id": 2,
+    "hero_id": 4,
+    "note": "Comfort hero for carry",
+    "sort_order": 1,
+    "created_at": "2026-03-19T04:38:48.000000Z",
+    "updated_at": "2026-03-19T04:45:13.000000Z",
+    "hero": {
+      "id": 4,
+      "opendota_hero_id": 4,
+      "name": "npc_dota_hero_bloodseeker",
+      "localized_name": "Bloodseeker",
+      "primary_attr": "agi",
+      "attack_type": "Melee",
+      "roles": [
+        "Carry",
+        "Disabler",
+        "Nuker",
+        "Initiator"
+      ],
+      "image": null,
+      "icon": null,
+      "created_at": "2026-03-19T01:54:19.000000Z",
+      "updated_at": "2026-03-19T01:54:19.000000Z"
+    }
+  }
+}
+
+ENDPOINT : http://127.0.0.1:8000/api/draft-plans/2/preferred-picks/4/
+METHOD : PUT
+BODY : 
+{
+  "hero_id": 1,
+  "note": "Hero easy to controll",
+  "priority" : "1",
+  "sort_order": 1
+}
+RESPONSE : 
+{
+  "data": {
+    "id": 4,
+    "draft_plan_id": 2,
+    "hero_id": 1,
+    "note": "Hero easy to controll",
+    "priority": 1,
+    "sort_order": 1,
+    "created_at": "2026-03-19T04:38:57.000000Z",
+    "updated_at": "2026-03-19T04:47:27.000000Z",
+    "hero": {
+      "id": 1,
+      "opendota_hero_id": 1,
+      "name": "npc_dota_hero_antimage",
+      "localized_name": "Anti-Mage",
+      "primary_attr": "agi",
+      "attack_type": "Melee",
+      "roles": [
+        "Carry",
+        "Escape",
+        "Nuker"
+      ],
+      "image": null,
+      "icon": null,
+      "created_at": "2026-03-19T01:54:19.000000Z",
+      "updated_at": "2026-03-19T01:54:19.000000Z"
+    }
+  }
+}
+
+ENDPOINT : http://127.0.0.1:8000/api/draft-plans/2/enemy-threats/4/
+METHOD : PUT
+BODY : 
+{
+  "hero_id": 7,
+  "note": "Dangerous Hero",
+  "threat_level": 5,
+  "sort_order": 1
+}
+RESPONSE :
+{
+  "data": {
+    "id": 4,
+    "draft_plan_id": 2,
+    "hero_id": 7,
+    "note": "Dangerous Hero",
+    "threat_level": 5,
+    "sort_order": 1,
+    "created_at": "2026-03-19T04:39:07.000000Z",
+    "updated_at": "2026-03-19T04:52:44.000000Z",
+    "hero": {
+      "id": 7,
+      "opendota_hero_id": 7,
+      "name": "npc_dota_hero_earthshaker",
+      "localized_name": "Earthshaker",
+      "primary_attr": "str",
+      "attack_type": "Melee",
+      "roles": [
+        "Support",
+        "Initiator",
+        "Disabler",
+        "Nuker"
+      ],
+      "image": null,
+      "icon": null,
+      "created_at": "2026-03-19T01:54:19.000000Z",
+      "updated_at": "2026-03-19T01:54:19.000000Z"
+    }
+  }
+}
+
+ENDPOINT : http://127.0.0.1:8000/api/draft-plans/2/enemy-threats/4/
+METHOD : DELETE
+RESPONSE : status code 204
+
+ENDPOINT : http://127.0.0.1:8000/api/draft-plans/2/preferred-picks/4/
+METHOD : DELETE
+RESPONSE : status code 204
+
+ENDPOINT : http://127.0.0.1:8000/api/draft-plans/2/bans/4/
+METHOD : DELETE
+RESPONSE : status code 204

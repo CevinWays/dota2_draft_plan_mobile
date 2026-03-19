@@ -9,7 +9,8 @@ import '../../cubit/edit_draft_item_cubit.dart';
 import '../../cubit/edit_draft_item_state.dart';
 
 class EditBanHeroModal extends StatefulWidget {
-  final String planId;
+  final String draftPlanId;
+  final int itemId;
   final int heroId;
   final String heroName;
   final String heroIcon;
@@ -17,7 +18,8 @@ class EditBanHeroModal extends StatefulWidget {
 
   const EditBanHeroModal({
     super.key,
-    required this.planId,
+    required this.draftPlanId,
+    required this.itemId,
     required this.heroId,
     required this.heroName,
     required this.heroIcon,
@@ -46,7 +48,8 @@ class _EditBanHeroModalState extends State<EditBanHeroModal> {
   void _submit() {
     context.read<EditDraftItemCubit>().submitBanUpdate(
       UpdateBanParams(
-        planId: widget.planId,
+        draftPlanId: widget.draftPlanId,
+        itemId: widget.itemId,
         heroId: widget.heroId,
         note: _noteController.text.trim(),
       ),

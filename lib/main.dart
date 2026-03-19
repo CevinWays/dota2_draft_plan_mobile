@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dota2_draft_plan_mobile/core/di/injection_container.dart' as di;
 import 'package:dota2_draft_plan_mobile/core/theme/app_theme.dart';
-import 'package:dota2_draft_plan_mobile/features/auth/presentation/cubit/login_cubit.dart';
-import 'package:dota2_draft_plan_mobile/features/auth/presentation/pages/login_page.dart';
+import 'package:dota2_draft_plan_mobile/features/auth/presentation/cubit/splash_cubit.dart';
+import 'package:dota2_draft_plan_mobile/features/auth/presentation/pages/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +21,8 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
       home: BlocProvider(
-        create: (_) => di.sl<LoginCubit>(),
-        child: const LoginPage(),
+        create: (_) => di.sl<SplashCubit>(),
+        child: const SplashPage(),
       ),
     );
   }

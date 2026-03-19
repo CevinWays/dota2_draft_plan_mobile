@@ -10,14 +10,14 @@ class UserModel extends User {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] as String,
-      email: json['email'] as String,
-      fullName: json['full_name'] as String,
-      token: json['token'] as String,
+      id: json['id']?.toString() ?? '',
+      email: json['email']?.toString() ?? '',
+      fullName: json['name']?.toString() ?? '',
+      token: json['access_token']?.toString() ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'email': email, 'full_name': fullName, 'token': token};
+    return {'id': id, 'email': email, 'name': fullName, 'access_token': token};
   }
 }

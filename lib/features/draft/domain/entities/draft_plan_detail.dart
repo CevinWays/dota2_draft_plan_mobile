@@ -32,71 +32,85 @@ class DraftPlanDetail extends Equatable {
 }
 
 class DraftPlanBan extends Equatable {
+  final int id;
   final int heroId;
   final String heroName;
   final String heroIcon;
+  final int sortOrder;
   final String? note;
 
   const DraftPlanBan({
+    required this.id,
     required this.heroId,
     required this.heroName,
     required this.heroIcon,
+    required this.sortOrder,
     this.note,
   });
 
   @override
-  List<Object?> get props => [heroId, heroName, heroIcon, note];
+  List<Object?> get props => [id, heroId, heroName, heroIcon, sortOrder, note];
 }
 
 class DraftPlanPreferredPick extends Equatable {
+  final int id;
   final int heroId;
   final String heroName;
   final String heroIcon;
   final String priority;
-  final String? role;
+  final int sortOrder;
   final String? note;
 
   const DraftPlanPreferredPick({
+    required this.id,
     required this.heroId,
     required this.heroName,
     required this.heroIcon,
     required this.priority,
-    this.role,
+    required this.sortOrder,
     this.note,
   });
 
   @override
-  List<Object?> get props => [heroId, heroName, heroIcon, priority, role, note];
+  List<Object?> get props => [id, heroId, heroName, heroIcon, priority, sortOrder, note];
 }
 
 class DraftPlanEnemyThreat extends Equatable {
+  final int id;
   final int heroId;
   final String heroName;
   final String heroIcon;
+  final int threatLevel;
+  final int sortOrder;
   final String? note;
 
   const DraftPlanEnemyThreat({
+    required this.id,
     required this.heroId,
     required this.heroName,
     required this.heroIcon,
+    required this.threatLevel,
+    required this.sortOrder,
     this.note,
   });
 
   @override
-  List<Object?> get props => [heroId, heroName, heroIcon, note];
+  List<Object?> get props => [id, heroId, heroName, heroIcon, threatLevel, sortOrder, note];
 }
 
 class DraftPlanItemTiming extends Equatable {
-  final String label;
-  final String targetTime;
-  final String explanation;
+  final int id;
+  final String itemName;
+  final int minuteMark;
+  final String? note;
 
   const DraftPlanItemTiming({
-    required this.label,
-    required this.targetTime,
-    required this.explanation,
+    required this.id,
+    required this.itemName,
+    required this.minuteMark,
+    this.note,
   });
 
   @override
-  List<Object?> get props => [label, targetTime, explanation];
+  List<Object?> get props => [id, itemName, minuteMark, note];
 }

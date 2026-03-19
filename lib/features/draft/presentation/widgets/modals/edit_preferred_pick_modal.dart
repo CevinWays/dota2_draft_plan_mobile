@@ -9,21 +9,21 @@ import '../../cubit/edit_draft_item_cubit.dart';
 import '../../cubit/edit_draft_item_state.dart';
 
 class EditPreferredPickModal extends StatefulWidget {
-  final String planId;
+  final String draftPlanId;
+  final int itemId;
   final int heroId;
   final String heroName;
   final String heroIcon;
-  final String? initialRole;
   final String initialPriority;
   final String? initialNote;
 
   const EditPreferredPickModal({
     super.key,
-    required this.planId,
+    required this.draftPlanId,
+    required this.itemId,
     required this.heroId,
     required this.heroName,
     required this.heroIcon,
-    this.initialRole,
     required this.initialPriority,
     this.initialNote,
   });
@@ -33,32 +33,31 @@ class EditPreferredPickModal extends StatefulWidget {
 }
 
 class _EditPreferredPickModalState extends State<EditPreferredPickModal> {
-  late final TextEditingController _roleController;
   late final TextEditingController _noteController;
   late String _selectedPriority;
 
   @override
   void initState() {
     super.initState();
-    _roleController = TextEditingController(text: widget.initialRole);
     _noteController = TextEditingController(text: widget.initialNote);
     _selectedPriority = widget.initialPriority;
   }
 
   @override
   void dispose() {
-    _roleController.dispose();
     _noteController.dispose();
     super.dispose();
   }
 
   void _submit() {
+    // Convert String priority to int (LOW=1, MEDIUM=2, HIGH=3)
+    final int priorityInt = _selectedPriority == 'HIGH' ? 3 : _selectedPriority == 'MEDIUM' ? 2 : 1;
     context.read<EditDraftItemCubit>().submitPickUpdate(
       UpdatePickParams(
-        planId: widget.planId,
+        draftPlanId: widget.draftPlanId,
+        itemId: widget.itemId,
         heroId: widget.heroId,
-        role: _roleController.text.trim(),
-        priority: _selectedPriority,
+        priority: priorityInt,
         note: _noteController.text.trim(),
       ),
     );
@@ -183,36 +182,7 @@ class _EditPreferredPickModalState extends State<EditPreferredPickModal> {
               ),
               const SizedBox(height: 24),
 
-              // Role Input
-              Row(
-                children: [
-                  const Icon(Icons.shield, color: Colors.white70, size: 20),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'ROLE',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _roleController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: 'e.g. Mid Laner',
-                  hintStyle: const TextStyle(color: Colors.white38),
-                  filled: true,
-                  fillColor: AppColors.surfaceVariant,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
+              // Removed Role UI since the API does not support it anymore.
 
               // Priority Selection
               Row(

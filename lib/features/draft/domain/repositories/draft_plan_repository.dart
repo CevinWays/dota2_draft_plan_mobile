@@ -7,8 +7,20 @@ abstract class DraftPlanRepository {
   Future<List<DraftPlan>> getDraftPlans();
   Future<DraftPlanDetail> getDraftPlanDetail(String id);
   Future<DraftPlan> createDraftPlan(CreateDraftPlanParams params);
+
+  // ADD
+  Future<void> addBan(AddBanParams params);
+  Future<void> addPreferredPick(AddPickParams params);
+  Future<void> addEnemyThreat(AddThreatParams params);
+
+  // UPDATE
   Future<void> updateBan(UpdateBanParams params);
   Future<void> updatePreferredPick(UpdatePickParams params);
   Future<void> updateEnemyThreat(UpdateThreatParams params);
   Future<void> updateItemTiming(UpdateTimingParams params);
+
+  // DELETE
+  Future<void> deleteBan(DeleteItemParams params);
+  Future<void> deletePreferredPick(DeleteItemParams params);
+  Future<void> deleteEnemyThreat(DeleteItemParams params);
 }

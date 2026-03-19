@@ -8,17 +8,19 @@ import '../../cubit/edit_draft_item_cubit.dart';
 import '../../cubit/edit_draft_item_state.dart';
 
 class EditItemTimingModal extends StatefulWidget {
-  final String planId;
-  final String initialLabel;
-  final String initialTargetTime;
-  final String initialExplanation;
+  final String draftPlanId;
+  final int itemId;
+  final String itemName;
+  final int initialMinuteMark;
+  final String? initialNote;
 
   const EditItemTimingModal({
     super.key,
-    required this.planId,
-    required this.initialLabel,
-    required this.initialTargetTime,
-    required this.initialExplanation,
+    required this.draftPlanId,
+    required this.itemId,
+    required this.itemName,
+    required this.initialMinuteMark,
+    this.initialNote,
   });
 
   @override
@@ -26,23 +28,20 @@ class EditItemTimingModal extends StatefulWidget {
 }
 
 class _EditItemTimingModalState extends State<EditItemTimingModal> {
-  late final TextEditingController _labelController;
   late final TextEditingController _timeController;
   late final TextEditingController _explanationController;
 
   @override
   void initState() {
     super.initState();
-    _labelController = TextEditingController(text: widget.initialLabel);
-    _timeController = TextEditingController(text: widget.initialTargetTime);
+    _timeController = TextEditingController(text: widget.initialMinuteMark.toString());
     _explanationController = TextEditingController(
-      text: widget.initialExplanation,
+      text: widget.initialNote,
     );
   }
 
   @override
   void dispose() {
-    _labelController.dispose();
     _timeController.dispose();
     _explanationController.dispose();
     super.dispose();
@@ -51,11 +50,10 @@ class _EditItemTimingModalState extends State<EditItemTimingModal> {
   void _submit() {
     context.read<EditDraftItemCubit>().submitTimingUpdate(
       UpdateTimingParams(
-        planId: widget.planId,
-        originalLabel: widget.initialLabel,
-        newLabel: _labelController.text.trim(),
-        targetTime: _timeController.text.trim(),
-        explanation: _explanationController.text.trim(),
+        draftPlanId: widget.draftPlanId,
+        itemId: widget.itemId,
+        minuteMark: int.tryParse(_timeController.text.trim()) ?? 0,
+        note: _explanationController.text.trim(),
       ),
     );
   }
@@ -140,7 +138,7 @@ class _EditItemTimingModalState extends State<EditItemTimingModal> {
                             ),
                           ),
                           Text(
-                            widget.initialLabel,
+                            widget.itemName,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -155,7 +153,7 @@ class _EditItemTimingModalState extends State<EditItemTimingModal> {
               ),
               const SizedBox(height: 24),
 
-              // Timing Label / Time Input
+              // Time Input
               Row(
                 children: [
                   Expanded(
@@ -163,37 +161,7 @@ class _EditItemTimingModalState extends State<EditItemTimingModal> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'TIMING LABEL',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextField(
-                          controller: _labelController,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: 'e.g. BKB',
-                            filled: true,
-                            fillColor: AppColors.surfaceVariant,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'TARGET TIME',
+                          'MINUTE MARK',
                           style: TextStyle(
                             color: Colors.white70,
                             fontWeight: FontWeight.bold,
@@ -203,12 +171,13 @@ class _EditItemTimingModalState extends State<EditItemTimingModal> {
                         const SizedBox(height: 8),
                         TextField(
                           controller: _timeController,
+                          keyboardType: TextInputType.number,
                           style: const TextStyle(
                             color: AppColors.threatYellow,
                             fontWeight: FontWeight.bold,
                           ),
                           decoration: InputDecoration(
-                            hintText: 'e.g. ~18 min',
+                            hintText: 'e.g. 18',
                             suffixIcon: const Icon(
                               Icons.access_time,
                               color: Colors.white54,

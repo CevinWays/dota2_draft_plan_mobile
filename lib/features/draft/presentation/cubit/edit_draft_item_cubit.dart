@@ -7,13 +7,21 @@ class EditDraftItemCubit extends Cubit<EditDraftItemState> {
   final UpdateDraftPlanPreferredPick updatePick;
   final UpdateDraftPlanEnemyThreat updateThreat;
   final UpdateDraftPlanItemTiming updateTiming;
+  final DeleteDraftPlanBan deleteBan;
+  final DeleteDraftPlanPreferredPick deletePick;
+  final DeleteDraftPlanEnemyThreat deleteThreat;
 
   EditDraftItemCubit({
     required this.updateBan,
     required this.updatePick,
     required this.updateThreat,
     required this.updateTiming,
+    required this.deleteBan,
+    required this.deletePick,
+    required this.deleteThreat,
   }) : super(EditDraftItemInitial());
+
+  // ── UPDATE ──────────────────────────────────────────────────────────────────
 
   Future<void> submitBanUpdate(UpdateBanParams params) async {
     emit(EditDraftItemLoading());
@@ -49,6 +57,38 @@ class EditDraftItemCubit extends Cubit<EditDraftItemState> {
     emit(EditDraftItemLoading());
     try {
       await updateTiming(params);
+      emit(EditDraftItemSuccess());
+    } catch (e) {
+      emit(EditDraftItemError(e.toString()));
+    }
+  }
+
+  // ── DELETE ───────────────────────────────────────────────────────────────────
+
+  Future<void> submitBanDelete(DeleteItemParams params) async {
+    emit(EditDraftItemLoading());
+    try {
+      await deleteBan(params);
+      emit(EditDraftItemSuccess());
+    } catch (e) {
+      emit(EditDraftItemError(e.toString()));
+    }
+  }
+
+  Future<void> submitPickDelete(DeleteItemParams params) async {
+    emit(EditDraftItemLoading());
+    try {
+      await deletePick(params);
+      emit(EditDraftItemSuccess());
+    } catch (e) {
+      emit(EditDraftItemError(e.toString()));
+    }
+  }
+
+  Future<void> submitThreatDelete(DeleteItemParams params) async {
+    emit(EditDraftItemLoading());
+    try {
+      await deleteThreat(params);
       emit(EditDraftItemSuccess());
     } catch (e) {
       emit(EditDraftItemError(e.toString()));

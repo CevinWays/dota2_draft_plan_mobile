@@ -1,20 +1,35 @@
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
+import '../datasources/auth_local_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
+  final AuthLocalDataSource localDataSource;
 
-  AuthRepositoryImpl({required this.remoteDataSource});
+  AuthRepositoryImpl({
+    required this.remoteDataSource,
+    required this.localDataSource,
+  });
 
   @override
   Future<User> login(String email, String password) async {
     // The data source returns a UserModel, which extends User.
-    return await remoteDataSource.login(email, password);
+    final user = await remoteDataSource.login(email, password);
+    await localDataSource.cacheToken(user.token);
+    return user;
   }
 
   @override
   Future<User> register(String fullName, String email, String password) async {
-    return await remoteDataSource.register(fullName, email, password);
+    final user = await remoteDataSource.register(fullName, email, password);
+    await localDataSource.cacheToken(user.token);
+    return user;
+  }
+
+  @override
+  Future<bool> checkAuthStatus() async {
+    final token = await localDataSource.getToken();
+    return token != null && token.isNotEmpty;
   }
 }

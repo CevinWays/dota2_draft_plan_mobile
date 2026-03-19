@@ -8,7 +8,7 @@ class HeroRepositoryImpl implements HeroRepository {
   const HeroRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<List<HeroEntity>> getHeroes() async {
-    return remoteDataSource.getHeroes();
+  Future<List<HeroEntity>> getHeroes({String? localizedName}) async {
+    return remoteDataSource.getHeroes(localizedName: localizedName);
   }
 }

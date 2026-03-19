@@ -6,5 +6,5 @@ class GetHeroes {
 
   GetHeroes(this.repository);
 
-  Future<List<HeroEntity>> call() => repository.getHeroes();
+  Future<List<HeroEntity>> call({String? localizedName}) => repository.getHeroes(localizedName: localizedName);
 }

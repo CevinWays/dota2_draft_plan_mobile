@@ -9,18 +9,22 @@ import '../../cubit/edit_draft_item_cubit.dart';
 import '../../cubit/edit_draft_item_state.dart';
 
 class EditEnemyThreatModal extends StatefulWidget {
-  final String planId;
+  final String draftPlanId;
+  final int itemId;
   final int heroId;
   final String heroName;
   final String heroIcon;
+  final int initialThreatLevel;
   final String? initialNote;
 
   const EditEnemyThreatModal({
     super.key,
-    required this.planId,
+    required this.draftPlanId,
+    required this.itemId,
     required this.heroId,
     required this.heroName,
     required this.heroIcon,
+    required this.initialThreatLevel,
     this.initialNote,
   });
 
@@ -30,11 +34,13 @@ class EditEnemyThreatModal extends StatefulWidget {
 
 class _EditEnemyThreatModalState extends State<EditEnemyThreatModal> {
   late final TextEditingController _noteController;
+  late int _threatLevel;
 
   @override
   void initState() {
     super.initState();
     _noteController = TextEditingController(text: widget.initialNote);
+    _threatLevel = widget.initialThreatLevel;
   }
 
   @override
@@ -46,8 +52,10 @@ class _EditEnemyThreatModalState extends State<EditEnemyThreatModal> {
   void _submit() {
     context.read<EditDraftItemCubit>().submitThreatUpdate(
       UpdateThreatParams(
-        planId: widget.planId,
+        draftPlanId: widget.draftPlanId,
+        itemId: widget.itemId,
         heroId: widget.heroId,
+        threatLevel: _threatLevel,
         note: _noteController.text.trim(),
       ),
     );
@@ -146,6 +154,40 @@ class _EditEnemyThreatModalState extends State<EditEnemyThreatModal> {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 24),
+
+              // Threat Level Slider
+              Row(
+                children: [
+                  const Icon(
+                    Icons.security,
+                    color: AppColors.threatYellow,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'THREAT LEVEL: $_threatLevel',
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Slider(
+                value: _threatLevel.toDouble(),
+                min: 1,
+                max: 5,
+                divisions: 4,
+                activeColor: AppColors.threatYellow,
+                inactiveColor: Colors.white24,
+                onChanged: (val) {
+                  setState(() {
+                    _threatLevel = val.toInt();
+                  });
+                },
               ),
               const SizedBox(height: 24),
 

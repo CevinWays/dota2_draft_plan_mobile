@@ -7,41 +7,41 @@ abstract class AuthRemoteDataSource {
 }
 
 // Temporary Mock implementation for offline UI testing
-class AuthRemoteMockDataSource implements AuthRemoteDataSource {
-  @override
-  Future<UserModel> login(String email, String password) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 1));
+// class AuthRemoteMockDataSource implements AuthRemoteDataSource {
+//   @override
+//   Future<UserModel> login(String email, String password) async {
+//     // Simulate network delay
+//     await Future.delayed(const Duration(seconds: 1));
 
-    if (password.length < 8) {
-      throw Exception('Invalid credentials.');
-    }
+//     if (password.length < 8) {
+//       throw Exception('Invalid credentials.');
+//     }
 
-    return UserModel(
-      id: 'mock-auth-id-1234',
-      email: email,
-      fullName: 'John Doe Strategist',
-      token: 'mock-jwt-token-abcd',
-    );
-  }
+//     return UserModel(
+//       id: 'mock-auth-id-1234',
+//       email: email,
+//       fullName: 'John Doe Strategist',
+//       token: 'mock-jwt-token-abcd',
+//     );
+//   }
 
-  @override
-  Future<UserModel> register(
-    String fullName,
-    String email,
-    String password,
-  ) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 1));
+//   @override
+//   Future<UserModel> register(
+//     String fullName,
+//     String email,
+//     String password,
+//   ) async {
+//     // Simulate network delay
+//     await Future.delayed(const Duration(seconds: 1));
 
-    return UserModel(
-      id: 'mock-auth-id-5678',
-      email: email,
-      fullName: fullName,
-      token: 'mock-jwt-token-efgh',
-    );
-  }
-}
+//     return UserModel(
+//       id: 'mock-auth-id-5678',
+//       email: email,
+//       fullName: fullName,
+//       token: 'mock-jwt-token-efgh',
+//     );
+//   }
+// }
 
 // True API implementation
 class AuthRemoteApiDataSource implements AuthRemoteDataSource {
@@ -58,8 +58,10 @@ class AuthRemoteApiDataSource implements AuthRemoteDataSource {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        // Assume API returns { "data": { "id": "...", "email": "...", "full_name": "...", "token": "..." } }
-        return UserModel.fromJson(response.data['data']);
+        // Assume API returns { "data": { "id": "...", "email": "...", "name": "..." }, "access_token": "..." }
+        final data = response.data['data'] as Map<String, dynamic>;
+        data['access_token'] = response.data['access_token'];
+        return UserModel.fromJson(data);
       } else {
         throw Exception('Failed to login');
       }
@@ -81,7 +83,9 @@ class AuthRemoteApiDataSource implements AuthRemoteDataSource {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return UserModel.fromJson(response.data['data']);
+        final data = response.data['data'] as Map<String, dynamic>;
+        data['access_token'] = response.data['access_token'];
+        return UserModel.fromJson(data);
       } else {
         throw Exception('Failed to register');
       }
