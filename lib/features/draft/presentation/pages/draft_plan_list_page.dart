@@ -11,6 +11,8 @@ import 'package:dota2_draft_plan_mobile/features/draft/presentation/widgets/app_
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/pages/draft_plan_detail_page.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/pages/create_draft_plan_page.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/presentation/cubit/draft_plan_detail_cubit.dart';
+import 'package:dota2_draft_plan_mobile/features/auth/presentation/pages/login_page.dart';
+import 'package:dota2_draft_plan_mobile/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:dota2_draft_plan_mobile/core/di/injection_container.dart' as di;
 
 class DraftPlanListPage extends StatefulWidget {
@@ -31,16 +33,31 @@ class _DraftPlanListPageState extends State<DraftPlanListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: _buildAppBar(),
-      body: _buildBody(),
-      bottomNavigationBar: AppBottomNavBar(
-        currentIndex: _currentNavIndex,
-        onTap: (i) => setState(() => _currentNavIndex = i),
+    return BlocListener<DraftPlanListCubit, DraftPlanListState>(
+      listener: (context, state) {
+        if (state is DraftPlanListLogout) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (_) => BlocProvider(
+                create: (_) => di.sl<LoginCubit>(),
+                child: const LoginPage(),
+              ),
+            ),
+            (route) => false,
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: _buildAppBar(),
+        body: _buildBody(),
+        bottomNavigationBar: AppBottomNavBar(
+          currentIndex: _currentNavIndex,
+          onTap: (i) => setState(() => _currentNavIndex = i),
+        ),
+        floatingActionButton: _buildFab(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
-      floatingActionButton: _buildFab(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -62,7 +79,7 @@ class _DraftPlanListPageState extends State<DraftPlanListPage> {
             ),
           ),
           const SizedBox(width: 10),
-          const Text('Draft Plans'),
+          const Text('DOTA 2 Draft Plans'),
         ],
       ),
       actions: [
@@ -78,7 +95,9 @@ class _DraftPlanListPageState extends State<DraftPlanListPage> {
         ),
         IconButton(
           icon: const Icon(Icons.logout, color: AppColors.textSecondary),
-          onPressed: () {},
+          onPressed: () {
+            context.read<DraftPlanListCubit>().logout();
+          },
           tooltip: 'Logout',
         ),
       ],

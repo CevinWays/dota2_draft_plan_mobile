@@ -8,10 +8,20 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   RegisterCubit({required this.registerUseCase}) : super(RegisterInitial());
 
-  Future<void> register(String fullName, String email, String password) async {
+  Future<void> register(
+    String fullName,
+    String email,
+    String password,
+    String passwordConfirmation,
+  ) async {
     emit(RegisterLoading());
     try {
-      final user = await registerUseCase.call(fullName, email, password);
+      final user = await registerUseCase.call(
+        fullName,
+        email,
+        password,
+        passwordConfirmation,
+      );
       emit(RegisterSuccess(user));
     } catch (e) {
       final errorMsg = e.toString().replaceAll('Exception: ', '');

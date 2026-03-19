@@ -21,8 +21,18 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User> register(String fullName, String email, String password) async {
-    final user = await remoteDataSource.register(fullName, email, password);
+  Future<User> register(
+    String fullName,
+    String email,
+    String password,
+    String passwordConfirmation,
+  ) async {
+    final user = await remoteDataSource.register(
+      fullName,
+      email,
+      password,
+      passwordConfirmation,
+    );
     await localDataSource.cacheToken(user.token);
     return user;
   }
@@ -31,5 +41,11 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<bool> checkAuthStatus() async {
     final token = await localDataSource.getToken();
     return token != null && token.isNotEmpty;
+  }
+
+  @override
+  Future<void> logout() async {
+    await remoteDataSource.logout();
+    await localDataSource.removeToken();
   }
 }

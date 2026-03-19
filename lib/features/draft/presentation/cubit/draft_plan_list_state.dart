@@ -33,3 +33,7 @@ class DraftPlanListError extends DraftPlanListState {
   @override
   List<Object?> get props => [message];
 }
+
+class DraftPlanListLogout extends DraftPlanListState {
+  const DraftPlanListLogout();
+}

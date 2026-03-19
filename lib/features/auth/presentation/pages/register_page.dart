@@ -42,6 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
         _nameController.text.trim(),
         _emailController.text.trim(),
         _passwordController.text,
+        _confirmController.text,
       );
     }
   }

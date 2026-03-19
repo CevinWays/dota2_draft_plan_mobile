@@ -23,6 +23,7 @@ import 'package:dota2_draft_plan_mobile/features/auth/domain/repositories/auth_r
 import 'package:dota2_draft_plan_mobile/features/auth/domain/usecases/login_usecase.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/domain/usecases/register_usecase.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/domain/usecases/check_auth_status_usecase.dart';
+import 'package:dota2_draft_plan_mobile/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/presentation/cubit/register_cubit.dart';
 import 'package:dota2_draft_plan_mobile/features/auth/presentation/cubit/splash_cubit.dart';
@@ -88,10 +89,11 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
   sl.registerLazySingleton(() => CheckAuthStatusUseCase(sl()));
+  sl.registerLazySingleton(() => LogoutUseCase(sl()));
 
   // ------- Cubits (factory — new instance per page) -------
   sl.registerFactory(() => SplashCubit(checkAuthStatusUseCase: sl()));
-  sl.registerFactory(() => DraftPlanListCubit(sl()));
+  sl.registerFactory(() => DraftPlanListCubit(sl(), sl()));
   sl.registerFactory(() => DraftPlanDetailCubit(getDraftPlanDetail: sl()));
   sl.registerFactory(() => HeroBrowserCubit(sl()));
   sl.registerFactory(() => CreateDraftPlanCubit(sl(), sl(), sl(), sl()));

@@ -3,7 +3,13 @@ import 'package:dio/dio.dart';
 
 abstract class AuthRemoteDataSource {
   Future<UserModel> login(String email, String password);
-  Future<UserModel> register(String fullName, String email, String password);
+  Future<UserModel> register(
+    String fullName,
+    String email,
+    String password,
+    String passwordConfirmation,
+  );
+  Future<void> logout();
 }
 
 // Temporary Mock implementation for offline UI testing
@@ -75,11 +81,17 @@ class AuthRemoteApiDataSource implements AuthRemoteDataSource {
     String fullName,
     String email,
     String password,
+    String passwordConfirmation,
   ) async {
     try {
       final response = await dio.post(
         '/register',
-        data: {'full_name': fullName, 'email': email, 'password': password},
+        data: {
+          'name': fullName,
+          'email': email,
+          'password': password,
+          'password_confirmation': passwordConfirmation,
+        },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -91,6 +103,15 @@ class AuthRemoteApiDataSource implements AuthRemoteDataSource {
       }
     } on DioException catch (e) {
       throw Exception(e.response?.data['message'] ?? 'Network Error');
+    }
+  }
+
+  @override
+  Future<void> logout() async {
+    try {
+      await dio.post('/logout');
+    } on DioException {
+      // Server-side logout failed but we still clear local token upstream
     }
   }
 }
