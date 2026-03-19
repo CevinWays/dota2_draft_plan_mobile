@@ -73,6 +73,7 @@ class UpdatePickParams {
   final int priority;
   final String note;
   final int sortOrder;
+  final String role;
 
   const UpdatePickParams({
     required this.draftPlanId,
@@ -81,6 +82,7 @@ class UpdatePickParams {
     this.priority = 1,
     this.note = '',
     this.sortOrder = 1,
+    this.role = '',
   });
 }
 

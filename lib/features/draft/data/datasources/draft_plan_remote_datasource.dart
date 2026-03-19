@@ -125,6 +125,7 @@ class DraftPlanRemoteApiDataSource implements DraftPlanRemoteDataSource {
         'priority': params.priority,
         'note': params.note,
         'sort_order': params.sortOrder,
+        'role': params.role,
       },
     );
   }

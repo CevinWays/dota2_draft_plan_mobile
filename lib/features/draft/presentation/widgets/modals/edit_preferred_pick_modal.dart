@@ -16,6 +16,7 @@ class EditPreferredPickModal extends StatefulWidget {
   final String heroIcon;
   final String initialPriority;
   final String? initialNote;
+  final String? initialRole;
 
   const EditPreferredPickModal({
     super.key,
@@ -26,6 +27,7 @@ class EditPreferredPickModal extends StatefulWidget {
     required this.heroIcon,
     required this.initialPriority,
     this.initialNote,
+    this.initialRole,
   });
 
   @override
@@ -34,18 +36,21 @@ class EditPreferredPickModal extends StatefulWidget {
 
 class _EditPreferredPickModalState extends State<EditPreferredPickModal> {
   late final TextEditingController _noteController;
+  late final TextEditingController _roleController;
   late String _selectedPriority;
 
   @override
   void initState() {
     super.initState();
     _noteController = TextEditingController(text: widget.initialNote);
+    _roleController = TextEditingController(text: widget.initialRole);
     _selectedPriority = widget.initialPriority;
   }
 
   @override
   void dispose() {
     _noteController.dispose();
+    _roleController.dispose();
     super.dispose();
   }
 
@@ -63,6 +68,7 @@ class _EditPreferredPickModalState extends State<EditPreferredPickModal> {
         heroId: widget.heroId,
         priority: priorityInt,
         note: _noteController.text.trim(),
+        role: _roleController.text.trim(),
       ),
     );
   }
@@ -230,6 +236,42 @@ class _EditPreferredPickModalState extends State<EditPreferredPickModal> {
                     onChanged: (val) => setState(() => _selectedPriority = val),
                   ),
                 ],
+              ),
+              const SizedBox(height: 24),
+
+              // Input free text for role
+              Row(
+                children: [
+                  const Icon(
+                    Icons.description_outlined,
+                    color: Colors.white70,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'ROLE',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _roleController,
+                maxLines: 1,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'e.g. Carry',
+                  hintStyle: const TextStyle(color: Colors.white38),
+                  filled: true,
+                  fillColor: AppColors.surfaceVariant,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: AppColors.surfaceVariant),
+                  ),
+                ),
               ),
               const SizedBox(height: 24),
 
