@@ -48,6 +48,22 @@ class AddThreatParams {
   });
 }
 
+class AddItemTimingParams {
+  final String draftPlanId;
+  final String note;
+  final String itemName;
+  final int minuteMark;
+  final int sortOrder;
+
+  const AddItemTimingParams({
+    required this.draftPlanId,
+    required this.itemName,
+    this.note = '',
+    this.minuteMark = 1,
+    this.sortOrder = 1,
+  });
+}
+
 // ─── Params for UPDATE operations ─────────────────────────────────────────────
 
 class UpdateBanParams {
@@ -150,6 +166,12 @@ class AddDraftPlanEnemyThreat {
   Future<void> call(AddThreatParams params) => repository.addEnemyThreat(params);
 }
 
+class AddDraftPlanItemTiming {
+  final DraftPlanRepository repository;
+  AddDraftPlanItemTiming(this.repository);
+  Future<void> call(AddItemTimingParams params) => repository.addItemTiming(params);
+}
+
 class UpdateDraftPlanBan {
   final DraftPlanRepository repository;
   UpdateDraftPlanBan(this.repository);
@@ -190,4 +212,10 @@ class DeleteDraftPlanEnemyThreat {
   final DraftPlanRepository repository;
   DeleteDraftPlanEnemyThreat(this.repository);
   Future<void> call(DeleteItemParams params) => repository.deleteEnemyThreat(params);
+}
+
+class DeleteDraftPlanItemTiming {
+  final DraftPlanRepository repository;
+  DeleteDraftPlanItemTiming(this.repository);
+  Future<void> call(DeleteItemParams params) => repository.deleteItemTiming(params);
 }

@@ -8,6 +8,10 @@ import '../cubit/draft_plan_detail_state.dart';
 import '../widgets/draft_section_header.dart';
 import '../widgets/hero_list_item.dart';
 import '../widgets/item_timing_row.dart';
+import '../widgets/modals/add_ban_hero_modal.dart';
+import '../widgets/modals/add_enemy_threat_modal.dart';
+import '../widgets/modals/add_item_timing_modal.dart';
+import '../widgets/modals/add_preferred_pick_modal.dart';
 import '../widgets/modals/edit_ban_hero_modal.dart';
 import '../widgets/modals/edit_enemy_threat_modal.dart';
 import '../widgets/modals/edit_item_timing_modal.dart';
@@ -15,6 +19,7 @@ import '../widgets/modals/edit_preferred_pick_modal.dart';
 import 'draft_summary_page.dart';
 import '../../../../core/di/injection_container.dart';
 import '../cubit/edit_draft_item_cubit.dart';
+import '../cubit/heroes_cubit.dart';
 import '../../domain/usecases/update_draft_item_usecases.dart';
 
 class DraftPlanDetailPage extends StatefulWidget {
@@ -32,6 +37,73 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
     super.initState();
     context.read<DraftPlanDetailCubit>().fetchDraftPlanDetail(widget.planId);
   }
+
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+
+  void _refreshDetail() {
+    context.read<DraftPlanDetailCubit>().fetchDraftPlanDetail(widget.planId);
+  }
+
+  Future<bool?> _confirmDelete(BuildContext context, String itemName) {
+    return showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surfaceVariant,
+        title: const Text('Confirm Delete', style: TextStyle(color: Colors.white)),
+        content: Text(
+          'Delete "$itemName" from this draft plan?',
+          style: const TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Open a modal wrapped with both [EditDraftItemCubit] and [HeroesCubit] providers.
+  Future<bool?> _openAddModalWithHeroes(Widget modal) {
+    return showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surfaceVariant,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => sl<EditDraftItemCubit>()),
+          BlocProvider(create: (_) => sl<HeroesCubit>()),
+        ],
+        child: modal,
+      ),
+    );
+  }
+
+  /// Open an edit/add modal wrapped with just [EditDraftItemCubit].
+  Future<bool?> _openModal(Widget modal) {
+    return showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surfaceVariant,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => BlocProvider(
+        create: (_) => sl<EditDraftItemCubit>(),
+        child: modal,
+      ),
+    );
+  }
+
+  // ── Build ─────────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -53,20 +125,11 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                   ),
                 );
               },
-              icon: const Icon(
-                Icons.assignment,
-                size: 18,
-                color: AppColors.accent,
-              ),
-              label: const Text(
-                'Summary',
-                style: TextStyle(color: AppColors.accent),
-              ),
+              icon: const Icon(Icons.assignment, size: 18, color: AppColors.accent),
+              label: const Text('Summary', style: TextStyle(color: AppColors.accent)),
               style: TextButton.styleFrom(
                 backgroundColor: AppColors.accent.withValues(alpha: 0.1),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               ),
             ),
           ),
@@ -74,29 +137,19 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
       ),
       body: BlocBuilder<DraftPlanDetailCubit, DraftPlanDetailState>(
         builder: (context, state) {
-          if (state is DraftPlanDetailLoading ||
-              state is DraftPlanDetailInitial) {
+          if (state is DraftPlanDetailLoading || state is DraftPlanDetailInitial) {
             return _buildShimmerLoading();
           } else if (state is DraftPlanDetailError) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: AppColors.banRed,
-                    size: 48,
-                  ),
+                  const Icon(Icons.error_outline, color: AppColors.banRed, size: 48),
                   const SizedBox(height: 16),
-                  Text(
-                    state.message,
-                    style: const TextStyle(color: Colors.red),
-                  ),
+                  Text(state.message, style: const TextStyle(color: Colors.red)),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => context
-                        .read<DraftPlanDetailCubit>()
-                        .fetchDraftPlanDetail(widget.planId),
+                    onPressed: _refreshDetail,
                     child: const Text('Retry'),
                   ),
                 ],
@@ -112,11 +165,7 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                   // TITLE
                   Text(
                     detail.name,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   const SizedBox(height: 16),
 
@@ -134,11 +183,7 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(
-                          Icons.edit,
-                          size: 18,
-                          color: Colors.white54,
-                        ),
+                        icon: const Icon(Icons.edit, size: 18, color: Colors.white54),
                         onPressed: () {},
                         constraints: const BoxConstraints(),
                         padding: EdgeInsets.zero,
@@ -156,21 +201,22 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                     ),
                     child: Text(
                       detail.overview ?? 'No strategy notes provided.',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                        height: 1.5,
-                      ),
+                      style: const TextStyle(fontSize: 14, color: Colors.white, height: 1.5),
                     ),
                   ),
                   const SizedBox(height: 24),
 
-                  // BAN LIST
+                  // ── BAN LIST ─────────────────────────────────────────────────
                   DraftSectionHeader(
                     title: 'BAN LIST',
                     icon: Icons.block,
                     actionText: 'Add Hero',
-                    onActionPressed: () {},
+                    onActionPressed: () async {
+                      final result = await _openAddModalWithHeroes(
+                        AddBanHeroModal(draftPlanId: widget.planId),
+                      );
+                      if (result == true && mounted) _refreshDetail();
+                    },
                     textColor: AppColors.banRed,
                   ),
                   if (detail.bans.isEmpty)
@@ -182,65 +228,43 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                         heroIcon: ban.heroIcon,
                         note: ban.note,
                         onEdit: () async {
-                          final result = await showModalBottomSheet<bool>(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: AppColors.surfaceVariant,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(16),
-                              ),
-                            ),
-                            builder: (_) => BlocProvider(
-                              create: (_) => sl<EditDraftItemCubit>(),
-                              child: EditBanHeroModal(
-                                draftPlanId: widget.planId,
-                                itemId: ban.id,
-                                heroId: ban.heroId,
-                                heroName: ban.heroName,
-                                heroIcon: ban.heroIcon,
-                                initialNote: ban.note,
-                              ),
+                          final result = await _openModal(
+                            EditBanHeroModal(
+                              draftPlanId: widget.planId,
+                              itemId: ban.id,
+                              heroId: ban.heroId,
+                              heroName: ban.heroName,
+                              heroIcon: ban.heroIcon,
+                              initialNote: ban.note,
                             ),
                           );
-
-                          if (result == true && context.mounted) {
-                            context
-                                .read<DraftPlanDetailCubit>()
-                                .fetchDraftPlanDetail(widget.planId);
-                          }
+                          if (result == true && mounted) _refreshDetail();
                         },
                         onDelete: () async {
-                          final confirmed = await _confirmDelete(
-                            context,
-                            ban.heroName,
-                          );
+                          final confirmed = await _confirmDelete(context, ban.heroName);
                           if (confirmed == true && context.mounted) {
                             final cubit = sl<EditDraftItemCubit>();
                             await cubit.submitBanDelete(
-                              DeleteItemParams(
-                                draftPlanId: widget.planId,
-                                itemId: ban.id,
-                              ),
+                              DeleteItemParams(draftPlanId: widget.planId, itemId: ban.id),
                             );
-                            if (context.mounted) {
-                              context
-                                  .read<DraftPlanDetailCubit>()
-                                  .fetchDraftPlanDetail(widget.planId);
-                            }
+                            if (mounted) _refreshDetail();
                           }
                         },
                       ),
                     ),
-
                   const SizedBox(height: 16),
 
-                  // PREFERRED PICKS
+                  // ── PREFERRED PICKS ──────────────────────────────────────────
                   DraftSectionHeader(
                     title: 'PREFERRED PICKS',
                     icon: Icons.check_circle_outline,
                     actionText: 'Add Hero',
-                    onActionPressed: () {},
+                    onActionPressed: () async {
+                      final result = await _openAddModalWithHeroes(
+                        AddPreferredPickModal(draftPlanId: widget.planId),
+                      );
+                      if (result == true && mounted) _refreshDetail();
+                    },
                     textColor: AppColors.pickGreen,
                   ),
                   if (detail.preferredPicks.isEmpty)
@@ -253,66 +277,44 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                         priority: pick.priority,
                         note: pick.note,
                         onEdit: () async {
-                          final result = await showModalBottomSheet<bool>(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: AppColors.surfaceVariant,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(16),
-                              ),
-                            ),
-                            builder: (_) => BlocProvider(
-                              create: (_) => sl<EditDraftItemCubit>(),
-                              child: EditPreferredPickModal(
-                                draftPlanId: widget.planId,
-                                itemId: pick.id,
-                                heroId: pick.heroId,
-                                heroName: pick.heroName,
-                                heroIcon: pick.heroIcon,
-                                initialPriority: pick.priority,
-                                initialNote: pick.note,
-                              ),
+                          final result = await _openModal(
+                            EditPreferredPickModal(
+                              draftPlanId: widget.planId,
+                              itemId: pick.id,
+                              heroId: pick.heroId,
+                              heroName: pick.heroName,
+                              heroIcon: pick.heroIcon,
+                              initialPriority: pick.priority,
+                              initialNote: pick.note,
                             ),
                           );
-
-                          if (result == true && context.mounted) {
-                            context
-                                .read<DraftPlanDetailCubit>()
-                                .fetchDraftPlanDetail(widget.planId);
-                          }
+                          if (result == true && mounted) _refreshDetail();
                         },
                         onDelete: () async {
-                          final confirmed = await _confirmDelete(
-                            context,
-                            pick.heroName,
-                          );
+                          final confirmed = await _confirmDelete(context, pick.heroName);
                           if (confirmed == true && context.mounted) {
                             final cubit = sl<EditDraftItemCubit>();
                             await cubit.submitPickDelete(
-                              DeleteItemParams(
-                                draftPlanId: widget.planId,
-                                itemId: pick.id,
-                              ),
+                              DeleteItemParams(draftPlanId: widget.planId, itemId: pick.id),
                             );
-                            if (context.mounted) {
-                              context
-                                  .read<DraftPlanDetailCubit>()
-                                  .fetchDraftPlanDetail(widget.planId);
-                            }
+                            if (mounted) _refreshDetail();
                           }
                         },
                       ),
                     ),
-
                   const SizedBox(height: 16),
 
-                  // ENEMY THREATS
+                  // ── ENEMY THREATS ─────────────────────────────────────────────
                   DraftSectionHeader(
                     title: 'ENEMY THREATS',
                     icon: Icons.warning_amber_rounded,
                     actionText: 'Add Threat',
-                    onActionPressed: () {},
+                    onActionPressed: () async {
+                      final result = await _openAddModalWithHeroes(
+                        AddEnemyThreatModal(draftPlanId: widget.planId),
+                      );
+                      if (result == true && mounted) _refreshDetail();
+                    },
                     textColor: AppColors.threatYellow,
                   ),
                   if (detail.enemyThreats.isEmpty)
@@ -324,66 +326,44 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                         heroIcon: threat.heroIcon,
                         note: threat.note,
                         onEdit: () async {
-                          final result = await showModalBottomSheet<bool>(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: AppColors.surfaceVariant,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(16),
-                              ),
-                            ),
-                            builder: (_) => BlocProvider(
-                              create: (_) => sl<EditDraftItemCubit>(),
-                              child: EditEnemyThreatModal(
-                                draftPlanId: widget.planId,
-                                itemId: threat.id,
-                                heroId: threat.heroId,
-                                heroName: threat.heroName,
-                                heroIcon: threat.heroIcon,
-                                initialThreatLevel: threat.threatLevel,
-                                initialNote: threat.note,
-                              ),
+                          final result = await _openModal(
+                            EditEnemyThreatModal(
+                              draftPlanId: widget.planId,
+                              itemId: threat.id,
+                              heroId: threat.heroId,
+                              heroName: threat.heroName,
+                              heroIcon: threat.heroIcon,
+                              initialThreatLevel: threat.threatLevel,
+                              initialNote: threat.note,
                             ),
                           );
-
-                          if (result == true && context.mounted) {
-                            context
-                                .read<DraftPlanDetailCubit>()
-                                .fetchDraftPlanDetail(widget.planId);
-                          }
+                          if (result == true && mounted) _refreshDetail();
                         },
                         onDelete: () async {
-                          final confirmed = await _confirmDelete(
-                            context,
-                            threat.heroName,
-                          );
+                          final confirmed = await _confirmDelete(context, threat.heroName);
                           if (confirmed == true && context.mounted) {
                             final cubit = sl<EditDraftItemCubit>();
                             await cubit.submitThreatDelete(
-                              DeleteItemParams(
-                                draftPlanId: widget.planId,
-                                itemId: threat.id,
-                              ),
+                              DeleteItemParams(draftPlanId: widget.planId, itemId: threat.id),
                             );
-                            if (context.mounted) {
-                              context
-                                  .read<DraftPlanDetailCubit>()
-                                  .fetchDraftPlanDetail(widget.planId);
-                            }
+                            if (mounted) _refreshDetail();
                           }
                         },
                       ),
                     ),
-
                   const SizedBox(height: 16),
 
-                  // ITEM TIMING
+                  // ── ITEM TIMING ───────────────────────────────────────────────
                   DraftSectionHeader(
                     title: 'ITEM TIMING',
                     icon: Icons.access_time,
                     actionText: 'Add Items',
-                    onActionPressed: () {},
+                    onActionPressed: () async {
+                      final result = await _openModal(
+                        AddItemTimingModal(draftPlanId: widget.planId),
+                      );
+                      if (result == true && mounted) _refreshDetail();
+                    },
                     textColor: Colors.deepOrange,
                   ),
                   if (detail.itemTimings.isEmpty)
@@ -395,76 +375,35 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                         targetTime: timing.minuteMark.toString(),
                         explanation: timing.note ?? '',
                         onEdit: () async {
-                          final result = await showModalBottomSheet<bool>(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: AppColors.surfaceVariant,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(16),
-                              ),
-                            ),
-                            builder: (_) => BlocProvider(
-                              create: (_) => sl<EditDraftItemCubit>(),
-                              child: EditItemTimingModal(
-                                draftPlanId: widget.planId,
-                                itemId: timing.id,
-                                itemName: timing.itemName,
-                                initialMinuteMark: timing.minuteMark,
-                                initialNote: timing.note,
-                              ),
+                          final result = await _openModal(
+                            EditItemTimingModal(
+                              draftPlanId: widget.planId,
+                              itemId: timing.id,
+                              itemName: timing.itemName,
+                              initialMinuteMark: timing.minuteMark,
+                              initialNote: timing.note,
                             ),
                           );
-
-                          if (result == true && context.mounted) {
-                            context
-                                .read<DraftPlanDetailCubit>()
-                                .fetchDraftPlanDetail(widget.planId);
+                          if (result == true && mounted) _refreshDetail();
+                        },
+                        onDelete: () async {
+                          final confirmed = await _confirmDelete(context, timing.itemName);
+                          if (confirmed == true && context.mounted) {
+                            final cubit = sl<EditDraftItemCubit>();
+                            await cubit.submitTimingDelete(
+                              DeleteItemParams(draftPlanId: widget.planId, itemId: timing.id),
+                            );
+                            if (mounted) _refreshDetail();
                           }
                         },
-                        onDelete: () {},
                       ),
                     ),
                 ],
               ),
             );
           }
-
           return const SizedBox.shrink();
         },
-      ),
-    );
-  }
-
-  Future<bool?> _confirmDelete(BuildContext context, String itemName) {
-    return showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surfaceVariant,
-        title: const Text(
-          'Confirm Delete',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: Text(
-          'Delete "$itemName" from this draft plan?',
-          style: const TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.white54),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: Colors.redAccent),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -475,10 +414,7 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
       child: Center(
         child: Text(
           message,
-          style: const TextStyle(
-            color: Colors.white54,
-            fontStyle: FontStyle.italic,
-          ),
+          style: const TextStyle(color: Colors.white54, fontStyle: FontStyle.italic),
         ),
       ),
     );

@@ -79,6 +79,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => AddDraftPlanBan(sl()));
   sl.registerLazySingleton(() => AddDraftPlanPreferredPick(sl()));
   sl.registerLazySingleton(() => AddDraftPlanEnemyThreat(sl()));
+  sl.registerLazySingleton(() => AddDraftPlanItemTiming(sl()));
   // Update
   sl.registerLazySingleton(() => UpdateDraftPlanBan(sl()));
   sl.registerLazySingleton(() => UpdateDraftPlanPreferredPick(sl()));
@@ -88,6 +89,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => DeleteDraftPlanBan(sl()));
   sl.registerLazySingleton(() => DeleteDraftPlanPreferredPick(sl()));
   sl.registerLazySingleton(() => DeleteDraftPlanEnemyThreat(sl()));
+  sl.registerLazySingleton(() => DeleteDraftPlanItemTiming(sl()));
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
   sl.registerLazySingleton(() => CheckAuthStatusUseCase(sl()));
@@ -103,6 +105,10 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => CreateDraftPlanCubit(sl(), sl(), sl(), sl()));
   sl.registerFactory(
     () => EditDraftItemCubit(
+      addBanUseCase: sl(),
+      addPickUseCase: sl(),
+      addThreatUseCase: sl(),
+      addTimingUseCase: sl(),
       updateBan: sl(),
       updatePick: sl(),
       updateThreat: sl(),
@@ -110,6 +116,7 @@ Future<void> initDependencies() async {
       deleteBan: sl(),
       deletePick: sl(),
       deleteThreat: sl(),
+      deleteTimingUseCase: sl(),
     ),
   );
   sl.registerFactory(() => LoginCubit(loginUseCase: sl()));

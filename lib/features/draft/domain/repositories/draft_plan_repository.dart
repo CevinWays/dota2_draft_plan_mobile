@@ -12,6 +12,7 @@ abstract class DraftPlanRepository {
   Future<void> addBan(AddBanParams params);
   Future<void> addPreferredPick(AddPickParams params);
   Future<void> addEnemyThreat(AddThreatParams params);
+  Future<void> addItemTiming(AddItemTimingParams params);
 
   // UPDATE
   Future<void> updateBan(UpdateBanParams params);
@@ -23,4 +24,5 @@ abstract class DraftPlanRepository {
   Future<void> deleteBan(DeleteItemParams params);
   Future<void> deletePreferredPick(DeleteItemParams params);
   Future<void> deleteEnemyThreat(DeleteItemParams params);
+  Future<void> deleteItemTiming(DeleteItemParams params);
 }

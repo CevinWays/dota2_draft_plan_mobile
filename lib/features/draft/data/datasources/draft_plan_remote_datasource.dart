@@ -13,6 +13,7 @@ abstract class DraftPlanRemoteDataSource {
   Future<void> addBan(AddBanParams params);
   Future<void> addPreferredPick(AddPickParams params);
   Future<void> addEnemyThreat(AddThreatParams params);
+  Future<void> addItemTiming(AddItemTimingParams params);
 
   // UPDATE
   Future<void> updateBan(UpdateBanParams params);
@@ -24,6 +25,7 @@ abstract class DraftPlanRemoteDataSource {
   Future<void> deleteBan(DeleteItemParams params);
   Future<void> deletePreferredPick(DeleteItemParams params);
   Future<void> deleteEnemyThreat(DeleteItemParams params);
+  Future<void> deleteItemTiming(DeleteItemParams params);
 }
 
 /// Real Dio-based implementation matching the Laravel API response structure exactly.
@@ -102,6 +104,19 @@ class DraftPlanRemoteApiDataSource implements DraftPlanRemoteDataSource {
     );
   }
 
+  @override
+  Future<void> addItemTiming(AddItemTimingParams params) async {
+    await _dio.post(
+      '/draft-plans/${params.draftPlanId}/item-timings',
+      data: {
+        'item_name': params.itemName,
+        'note': params.note,
+        'minute_mark': params.minuteMark,
+        'sort_order': params.sortOrder,
+      },
+    );
+  }
+
   // ── UPDATE (PUT) ────────────────────────────────────────────────────────────
 
   @override
@@ -169,5 +184,10 @@ class DraftPlanRemoteApiDataSource implements DraftPlanRemoteDataSource {
   @override
   Future<void> deleteEnemyThreat(DeleteItemParams params) async {
     await _dio.delete('/draft-plans/${params.draftPlanId}/enemy-threats/${params.itemId}');
+  }
+
+  @override
+  Future<void> deleteItemTiming(DeleteItemParams params) async {
+    await _dio.delete('/draft-plans/${params.draftPlanId}/item-timings/${params.itemId}');
   }
 }

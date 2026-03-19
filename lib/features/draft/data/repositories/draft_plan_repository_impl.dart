@@ -29,6 +29,9 @@ class DraftPlanRepositoryImpl implements DraftPlanRepository {
   @override
   Future<void> addEnemyThreat(AddThreatParams params) => remoteDataSource.addEnemyThreat(params);
 
+  @override
+  Future<void> addItemTiming(AddItemTimingParams params) => remoteDataSource.addItemTiming(params);
+
   // UPDATE
   @override
   Future<void> updateBan(UpdateBanParams params) => remoteDataSource.updateBan(params);
@@ -51,4 +54,7 @@ class DraftPlanRepositoryImpl implements DraftPlanRepository {
 
   @override
   Future<void> deleteEnemyThreat(DeleteItemParams params) => remoteDataSource.deleteEnemyThreat(params);
+
+  @override
+  Future<void> deleteItemTiming(DeleteItemParams params) => remoteDataSource.deleteItemTiming(params);
 }
