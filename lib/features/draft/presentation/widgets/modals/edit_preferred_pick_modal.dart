@@ -51,7 +51,11 @@ class _EditPreferredPickModalState extends State<EditPreferredPickModal> {
 
   void _submit() {
     // Convert String priority to int (LOW=1, MEDIUM=2, HIGH=3)
-    final int priorityInt = _selectedPriority == 'HIGH' ? 3 : _selectedPriority == 'MEDIUM' ? 2 : 1;
+    final int priorityInt = _selectedPriority == 'HIGH'
+        ? 3
+        : _selectedPriority == 'MEDIUM'
+        ? 2
+        : 1;
     context.read<EditDraftItemCubit>().submitPickUpdate(
       UpdatePickParams(
         draftPlanId: widget.draftPlanId,
@@ -259,7 +263,7 @@ class _EditPreferredPickModalState extends State<EditPreferredPickModal> {
                   fillColor: AppColors.surfaceVariant,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
+                    borderSide: BorderSide(color: AppColors.surfaceVariant),
                   ),
                 ),
               ),

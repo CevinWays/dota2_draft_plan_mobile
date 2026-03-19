@@ -205,7 +205,7 @@ class _EditBanHeroModalState extends State<EditBanHeroModal> {
                   fillColor: AppColors.surfaceVariant,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
+                    borderSide: BorderSide(color: AppColors.surfaceVariant),
                   ),
                 ),
               ),

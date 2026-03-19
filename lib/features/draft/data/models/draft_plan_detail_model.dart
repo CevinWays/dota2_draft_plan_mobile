@@ -1,3 +1,4 @@
+import 'package:dota2_draft_plan_mobile/features/draft/data/models/hero_model.dart';
 import 'package:dota2_draft_plan_mobile/features/draft/domain/entities/draft_plan_detail.dart';
 
 class DraftPlanDetailModel extends DraftPlanDetail {
@@ -55,11 +56,12 @@ class DraftPlanBanModel extends DraftPlanBan {
 
   factory DraftPlanBanModel.fromJson(Map<String, dynamic> json) {
     final heroObj = json['hero'] as Map<String, dynamic>?;
+    final heroModel = heroObj != null ? HeroModel.fromJson(heroObj) : null;
     return DraftPlanBanModel(
       id: (json['id'] as num?)?.toInt() ?? 0,
       heroId: (json['hero_id'] as num?)?.toInt() ?? 0,
-      heroName: heroObj?['localized_name']?.toString() ?? 'Hero ${json['hero_id']}',
-      heroIcon: heroObj?['icon']?.toString() ?? '',
+      heroName: heroModel?.localizedName ?? 'Hero ${json['hero_id']}',
+      heroIcon: heroModel?.imgUrl ?? '',
       sortOrder: (json['sort_order'] as num?)?.toInt() ?? 0,
       note: json['note']?.toString(),
     );
@@ -84,11 +86,12 @@ class DraftPlanPreferredPickModel extends DraftPlanPreferredPick {
     if (intPriority == 3) priorityStr = 'HIGH';
 
     final heroObj = json['hero'] as Map<String, dynamic>?;
+    final heroModel = heroObj != null ? HeroModel.fromJson(heroObj) : null;
     return DraftPlanPreferredPickModel(
       id: (json['id'] as num?)?.toInt() ?? 0,
       heroId: (json['hero_id'] as num?)?.toInt() ?? 0,
-      heroName: heroObj?['localized_name']?.toString() ?? 'Hero ${json['hero_id']}',
-      heroIcon: heroObj?['icon']?.toString() ?? '',
+      heroName: heroModel?.localizedName ?? 'Hero ${json['hero_id']}',
+      heroIcon: heroModel?.imgUrl ?? '',
       priority: priorityStr,
       sortOrder: (json['sort_order'] as num?)?.toInt() ?? 0,
       note: json['note']?.toString(),
@@ -109,11 +112,12 @@ class DraftPlanEnemyThreatModel extends DraftPlanEnemyThreat {
 
   factory DraftPlanEnemyThreatModel.fromJson(Map<String, dynamic> json) {
     final heroObj = json['hero'] as Map<String, dynamic>?;
+    final heroModel = heroObj != null ? HeroModel.fromJson(heroObj) : null;
     return DraftPlanEnemyThreatModel(
       id: (json['id'] as num?)?.toInt() ?? 0,
       heroId: (json['hero_id'] as num?)?.toInt() ?? 0,
-      heroName: heroObj?['localized_name']?.toString() ?? 'Hero ${json['hero_id']}',
-      heroIcon: heroObj?['icon']?.toString() ?? '',
+      heroName: heroModel?.localizedName ?? 'Hero ${json['hero_id']}',
+      heroIcon: heroModel?.imgUrl ?? '',
       threatLevel: (json['threat_level'] as num?)?.toInt() ?? 1,
       sortOrder: (json['sort_order'] as num?)?.toInt() ?? 0,
       note: json['note']?.toString(),

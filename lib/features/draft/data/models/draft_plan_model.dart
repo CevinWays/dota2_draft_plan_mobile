@@ -18,9 +18,9 @@ class DraftPlanModel extends DraftPlan {
       title: json['title']?.toString() ?? json['name']?.toString() ?? '',
       description: json['strategy_notes']?.toString() ?? json['description']?.toString() ?? '',
       thumbnailUrl: json['thumbnail_url']?.toString() ?? '',
-      picks: (json['picks'] as num?)?.toInt() ?? 0,
-      bans: (json['bans'] as num?)?.toInt() ?? 0,
-      threats: (json['threats'] as num?)?.toInt() ?? 0,
+      picks: (json['count_prefered_pick_hero'] as num?)?.toInt() ?? (json['picks'] as num?)?.toInt() ?? 0,
+      bans: (json['count_ban_hero'] as num?)?.toInt() ?? (json['bans'] as num?)?.toInt() ?? 0,
+      threats: (json['count_enemy_threat_hero'] as num?)?.toInt() ?? (json['threats'] as num?)?.toInt() ?? 0,
       updatedAt: DateTime.tryParse(json['updated_at']?.toString() ?? '') ?? DateTime.now(),
     );
   }

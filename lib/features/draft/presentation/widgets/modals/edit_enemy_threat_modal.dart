@@ -222,7 +222,7 @@ class _EditEnemyThreatModalState extends State<EditEnemyThreatModal> {
                   fillColor: AppColors.surfaceVariant,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
+                    borderSide: BorderSide(color: AppColors.surfaceVariant),
                   ),
                 ),
               ),
