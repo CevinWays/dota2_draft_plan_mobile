@@ -34,10 +34,10 @@ class _EditItemTimingModalState extends State<EditItemTimingModal> {
   @override
   void initState() {
     super.initState();
-    _timeController = TextEditingController(text: widget.initialMinuteMark.toString());
-    _explanationController = TextEditingController(
-      text: widget.initialNote,
+    _timeController = TextEditingController(
+      text: widget.initialMinuteMark.toString(),
     );
+    _explanationController = TextEditingController(text: widget.initialNote);
   }
 
   @override
@@ -257,6 +257,7 @@ class _EditItemTimingModalState extends State<EditItemTimingModal> {
                               : const Text(
                                   'Save Timing Note',
                                   style: TextStyle(
+                                    color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),

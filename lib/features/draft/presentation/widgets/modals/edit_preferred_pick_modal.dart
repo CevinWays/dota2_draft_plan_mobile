@@ -306,6 +306,7 @@ class _EditPreferredPickModalState extends State<EditPreferredPickModal> {
                               : const Text(
                                   'Save Changes',
                                   style: TextStyle(
+                                    color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),

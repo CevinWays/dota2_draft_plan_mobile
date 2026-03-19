@@ -269,6 +269,7 @@ class _EditEnemyThreatModalState extends State<EditEnemyThreatModal> {
                               : const Text(
                                   'Update Threat',
                                   style: TextStyle(
+                                    color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),

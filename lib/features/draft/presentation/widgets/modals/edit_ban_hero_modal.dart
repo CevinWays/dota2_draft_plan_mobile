@@ -252,6 +252,7 @@ class _EditBanHeroModalState extends State<EditBanHeroModal> {
                               : const Text(
                                   'Save Changes',
                                   style: TextStyle(
+                                    color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),

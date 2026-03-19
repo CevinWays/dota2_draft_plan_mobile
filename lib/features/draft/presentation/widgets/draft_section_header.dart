@@ -5,6 +5,7 @@ class DraftSectionHeader extends StatelessWidget {
   final IconData icon;
   final String actionText;
   final VoidCallback onActionPressed;
+  final Color? textColor;
 
   const DraftSectionHeader({
     super.key,
@@ -12,6 +13,7 @@ class DraftSectionHeader extends StatelessWidget {
     required this.icon,
     required this.actionText,
     required this.onActionPressed,
+    this.textColor,
   });
 
   @override
@@ -20,15 +22,15 @@ class DraftSectionHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(
         children: [
-          Icon(icon, color: Colors.white70, size: 20),
+          Icon(icon, color: textColor ?? Colors.white70, size: 20),
           const SizedBox(width: 8),
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.2,
-              color: Colors.white,
+              color: textColor ?? Colors.white,
             ),
           ),
           const Spacer(),

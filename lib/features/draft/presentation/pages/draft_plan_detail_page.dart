@@ -171,6 +171,7 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                     icon: Icons.block,
                     actionText: 'Add Hero',
                     onActionPressed: () {},
+                    textColor: AppColors.banRed,
                   ),
                   if (detail.bans.isEmpty)
                     _buildEmptyState('No bans added yet.')
@@ -210,15 +211,22 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                           }
                         },
                         onDelete: () async {
-                          final confirmed = await _confirmDelete(context, ban.heroName);
+                          final confirmed = await _confirmDelete(
+                            context,
+                            ban.heroName,
+                          );
                           if (confirmed == true && context.mounted) {
                             final cubit = sl<EditDraftItemCubit>();
-                            await cubit.submitBanDelete(DeleteItemParams(
-                              draftPlanId: widget.planId,
-                              itemId: ban.id,
-                            ));
+                            await cubit.submitBanDelete(
+                              DeleteItemParams(
+                                draftPlanId: widget.planId,
+                                itemId: ban.id,
+                              ),
+                            );
                             if (context.mounted) {
-                              context.read<DraftPlanDetailCubit>().fetchDraftPlanDetail(widget.planId);
+                              context
+                                  .read<DraftPlanDetailCubit>()
+                                  .fetchDraftPlanDetail(widget.planId);
                             }
                           }
                         },
@@ -233,6 +241,7 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                     icon: Icons.check_circle_outline,
                     actionText: 'Add Hero',
                     onActionPressed: () {},
+                    textColor: AppColors.pickGreen,
                   ),
                   if (detail.preferredPicks.isEmpty)
                     _buildEmptyState('No preferred picks added yet.')
@@ -274,15 +283,22 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                           }
                         },
                         onDelete: () async {
-                          final confirmed = await _confirmDelete(context, pick.heroName);
+                          final confirmed = await _confirmDelete(
+                            context,
+                            pick.heroName,
+                          );
                           if (confirmed == true && context.mounted) {
                             final cubit = sl<EditDraftItemCubit>();
-                            await cubit.submitPickDelete(DeleteItemParams(
-                              draftPlanId: widget.planId,
-                              itemId: pick.id,
-                            ));
+                            await cubit.submitPickDelete(
+                              DeleteItemParams(
+                                draftPlanId: widget.planId,
+                                itemId: pick.id,
+                              ),
+                            );
                             if (context.mounted) {
-                              context.read<DraftPlanDetailCubit>().fetchDraftPlanDetail(widget.planId);
+                              context
+                                  .read<DraftPlanDetailCubit>()
+                                  .fetchDraftPlanDetail(widget.planId);
                             }
                           }
                         },
@@ -297,6 +313,7 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                     icon: Icons.warning_amber_rounded,
                     actionText: 'Add Threat',
                     onActionPressed: () {},
+                    textColor: AppColors.threatYellow,
                   ),
                   if (detail.enemyThreats.isEmpty)
                     _buildEmptyState('No enemy threats added yet.')
@@ -337,15 +354,22 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                           }
                         },
                         onDelete: () async {
-                          final confirmed = await _confirmDelete(context, threat.heroName);
+                          final confirmed = await _confirmDelete(
+                            context,
+                            threat.heroName,
+                          );
                           if (confirmed == true && context.mounted) {
                             final cubit = sl<EditDraftItemCubit>();
-                            await cubit.submitThreatDelete(DeleteItemParams(
-                              draftPlanId: widget.planId,
-                              itemId: threat.id,
-                            ));
+                            await cubit.submitThreatDelete(
+                              DeleteItemParams(
+                                draftPlanId: widget.planId,
+                                itemId: threat.id,
+                              ),
+                            );
                             if (context.mounted) {
-                              context.read<DraftPlanDetailCubit>().fetchDraftPlanDetail(widget.planId);
+                              context
+                                  .read<DraftPlanDetailCubit>()
+                                  .fetchDraftPlanDetail(widget.planId);
                             }
                           }
                         },
@@ -360,6 +384,7 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
                     icon: Icons.access_time,
                     actionText: 'Add Items',
                     onActionPressed: () {},
+                    textColor: Colors.deepOrange,
                   ),
                   if (detail.itemTimings.isEmpty)
                     _buildEmptyState('No item timings added yet.')
@@ -416,7 +441,10 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surfaceVariant,
-        title: const Text('Confirm Delete', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Confirm Delete',
+          style: TextStyle(color: Colors.white),
+        ),
         content: Text(
           'Delete "$itemName" from this draft plan?',
           style: const TextStyle(color: Colors.white70),
@@ -424,11 +452,17 @@ class _DraftPlanDetailPageState extends State<DraftPlanDetailPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white54),
+            ),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: Colors.redAccent),
+            ),
           ),
         ],
       ),
